@@ -1,21 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from "express";
 
-type AsyncHandler<T = any> = (
+/* eslint-disable @typescript-eslint/no-explicit-any */
+type AsyncHandler = (
   req: Request,
   res: Response,
   next: NextFunction
-) => Promise<T>;
+) => Promise<void>;
 
-export const catchAsync = (fn: AsyncHandler) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    fn(req, res, next).catch((err: unknown) => {
-      if (err instanceof Error) {
-        console.error("💥 Async Error:", err.message);
-      } else {
-        console.error("💥 Async Error (unknown):", err);
-      }
+export const catchAsync =
+  (fn: AsyncHandler) => (req: Request, res: Response, next: NextFunction) => {
+    Promise.resolve(fn(req, res, next)).catch((err: any) => {
       next(err);
     });
   };
-};
