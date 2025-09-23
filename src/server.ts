@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import { envVars } from "./app/config/env";
 import app from "./app";
 import { errorShutDown, gracefullShutDown } from "./app/utils/shutDown";
+import { connectRedis } from "./app/config/redis.config";
+import { seedSuperAdmin } from "./app/utils/seedSuperAdmin";
 
 let server: Server;
 const startServer = async () => {
@@ -10,7 +12,7 @@ const startServer = async () => {
     console.log("...Connecting to DB");
     await mongoose.connect(envVars.DB_URL);
 
-    console.log("Connected to DB!");
+    console.log("DB Connected!");
 
     server = app.listen(envVars.PORT, () => {
       console.log(`Server is listening to PORT ${envVars.PORT}`);
@@ -21,7 +23,9 @@ const startServer = async () => {
 };
 
 (async () => {
+  await connectRedis();
   await startServer();
+  await seedSuperAdmin();
 })();
 
 // Termination Signals
