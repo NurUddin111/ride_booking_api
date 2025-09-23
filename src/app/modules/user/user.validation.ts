@@ -20,7 +20,8 @@ const CreateUserZodValidation = z.object({
           return `Name cannot exceed ${issue.minimum} characters!`;
         }
       },
-    }),
+    })
+    .optional(),
 
   email: z
     .email({
@@ -40,7 +41,8 @@ const CreateUserZodValidation = z.object({
           return `Email cannot exceed ${issue.minimum} characters!`;
         }
       },
-    }),
+    })
+    .optional(),
 
   password: z
     .string({
