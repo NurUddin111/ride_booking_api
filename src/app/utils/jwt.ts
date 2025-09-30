@@ -1,6 +1,4 @@
 import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
-// import AppError from "../errorHelpers/AppError";
-// import { HttpStatusCodes } from "./httpStatusCodes";
 
 const generateToken = (
   payload: JwtPayload,

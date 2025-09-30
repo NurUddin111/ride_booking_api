@@ -4,20 +4,20 @@ import { catchAsync } from "../../utils/catchAsync";
 import { OTPServices } from "./otp.service";
 import { sendResponse } from "../../utils/sendResponse";
 
-const sendOTP = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const { name, email } = req.body;
+// const sendOTP = catchAsync(
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     const { name, email } = req.body;
 
-    await OTPServices.sendOTP(name, email);
+//     await OTPServices.sendOTP(name, email);
 
-    sendResponse(res, {
-      statusCode: 200,
-      success: true,
-      message: "OTP sent successfully",
-      data: null,
-    });
-  }
-);
+//     sendResponse(res, {
+//       statusCode: 200,
+//       success: true,
+//       message: "OTP sent successfully",
+//       data: null,
+//     });
+//   }
+// );
 
 const verifyOTP = catchAsync(async (req: Request, res: Response) => {
   const { email, otp } = req.body;
@@ -30,4 +30,4 @@ const verifyOTP = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const OTPControllers = { sendOTP, verifyOTP };
+export const OTPControllers = { verifyOTP };

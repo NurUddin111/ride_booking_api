@@ -9,6 +9,9 @@ import { generateToken, verifyToken } from "../../utils/jwt";
 import { Response } from "express";
 import bcrypt from "bcryptjs";
 import { JwtPayload } from "jsonwebtoken";
+import { RedisServices } from "../redis/redis.service";
+import { HydratedDocument } from "mongoose";
+import { geocodeAddress } from "../../utils/geoApiFy";
 
 const createUserRequest = async (
   res: Response,
@@ -31,7 +34,14 @@ const createUserRequest = async (
     throw new AppError(HttpStatusCodes.BAD_REQUEST, "User already exists");
   }
 
-  await OTPServices.sendOTP(name, email);
+  const sub = "Account Verification Code";
+  const temp = "accountVerificationOtp";
+  const tempData = {
+    name,
+  };
+  const OTP_EXPIRATION = 2 * 60;
+
+  await OTPServices.sendOTP(email, sub, temp, tempData, OTP_EXPIRATION);
 
   const jwtPayload = {
     name: name,
@@ -200,7 +210,7 @@ const updateUser = async (
     if (userId !== decodedToken.userId) {
       throw new AppError(
         401,
-        "It looks like you're trying to edit another user's profile. You can only make changes to your own"
+        "It looks like you're trying to edit another user's profile. You can only make changes to your own profile."
       );
     }
   }
@@ -212,6 +222,25 @@ const updateUser = async (
         "Setting up Admin role is a restricted action. For security, only users with an existing Admin role can assign it to others."
       );
     }
+  }
+
+  if (payload.role && payload.role === Role.DRIVER) {
+    if (!payload.vehicleInfo) {
+      throw new AppError(
+        HttpStatusCodes.BAD_REQUEST,
+        "If you want to update your role to DRIVER,you must have to give your vehicle information"
+      );
+    }
+  }
+
+  if (
+    payload.vehicleInfo?.isDriverApproved &&
+    decodedToken.role !== Role.ADMIN
+  ) {
+    throw new AppError(
+      HttpStatusCodes.BAD_REQUEST,
+      "You can't set your driving approval status by yourself.Please submit your vehicle information or if you have already submitted then plese wait for 1-2 business days. We will inform after we finish checking your vehicle information."
+    );
   }
 
   if (payload.isActive || payload.isDeleted || payload.isVerified) {
@@ -249,6 +278,42 @@ const deleteUser = async (userId: string) => {
   return user;
 };
 
+const setVehicleLocation = async (
+  decodedToken: JwtPayload,
+  address: string
+) => {
+  const driverId = decodedToken.userId;
+  const driver = (await User.findById(driverId)) as HydratedDocument<IUser>;
+  console.log(address);
+  const addressCo = await geocodeAddress(address);
+
+  if (!addressCo) {
+    throw new AppError(
+      HttpStatusCodes.NOT_FOUND,
+      "Sorry! Couldn't find your location"
+    );
+  }
+
+  const lng = Number(addressCo.longitude);
+  const lat = Number(addressCo.latitude);
+  const add = addressCo.address;
+  console.log(lng, lat, add);
+
+  await RedisServices.setVehicleLocation(driverId, lng, lat);
+
+  driver.vehicleInfo.vehicleLocation = {
+    coordinates: {
+      lng: addressCo.longitude,
+      lat: addressCo.latitude,
+    },
+    address: addressCo.address,
+  };
+
+  await driver.save();
+
+  return { driver };
+};
+
 export const UserServices = {
   createUserRequest,
   createUserVerification,
@@ -258,4 +323,5 @@ export const UserServices = {
   getMe,
   updateUser,
   deleteUser,
+  setVehicleLocation,
 };

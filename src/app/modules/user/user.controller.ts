@@ -6,6 +6,7 @@ import { IUser } from "./user.interface";
 import { sendResponse } from "../../utils/sendResponse";
 import { HttpStatusCodes } from "../../utils/httpStatusCodes";
 import { JwtPayload } from "jsonwebtoken";
+import { RedisServices } from "../redis/redis.service";
 
 const createUserRequest = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -125,6 +126,23 @@ const deleteUser = catchAsync(
   }
 );
 
+const updateVehicleLocation = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user as JwtPayload;
+    const address = req.body.address;
+    const vehicleLocation = await UserServices.setVehicleLocation(
+      decodedToken,
+      address
+    );
+    sendResponse(res, {
+      success: true,
+      statusCode: HttpStatusCodes.OK,
+      message: "Driver Location Updated successfully",
+      data: vehicleLocation,
+    });
+  }
+);
+
 export const UserControllers = {
   createUserRequest,
   createUserVerification,
@@ -134,4 +152,5 @@ export const UserControllers = {
   getMe,
   updateUser,
   deleteUser,
+  updateVehicleLocation,
 };

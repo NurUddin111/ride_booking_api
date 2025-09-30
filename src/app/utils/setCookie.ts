@@ -7,6 +7,8 @@ export interface IAuthTokens {
   accessToken?: string;
   refreshToken?: string;
   forgotPassToken?: string;
+  inActiveToken?: string;
+  blockedToken?: string;
 }
 
 export const setAuthCookie = (res: Response, tokenInfo: IAuthTokens) => {
@@ -57,6 +59,21 @@ export const setAuthCookie = (res: Response, tokenInfo: IAuthTokens) => {
       sameSite: "lax",
     });
     res.cookie("accessToken", tokenInfo.forgotPassToken, {
+      httpOnly: true,
+      secure: envVars.NODE_ENV === "production" ? true : false,
+      sameSite: envVars.NODE_ENV === "production" ? "none" : "lax",
+    });
+  }
+
+  if (tokenInfo.inActiveToken) {
+    res.cookie("inActiveToken", tokenInfo.inActiveToken, {
+      httpOnly: true,
+      secure: envVars.NODE_ENV === "production" ? true : false,
+      sameSite: envVars.NODE_ENV === "production" ? "none" : "lax",
+    });
+  }
+  if (tokenInfo.blockedToken) {
+    res.cookie("blockedToken", tokenInfo.blockedToken, {
       httpOnly: true,
       secure: envVars.NODE_ENV === "production" ? true : false,
       sameSite: envVars.NODE_ENV === "production" ? "none" : "lax",
