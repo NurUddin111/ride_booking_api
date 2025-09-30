@@ -22,6 +22,11 @@ router.get("/", checkAuth(Role.ADMIN), UserControllers.getAllUsers);
 router.get("/me", checkAuth(...Object.values(Role)), UserControllers.getMe);
 router.get("/:id", checkAuth(Role.ADMIN), UserControllers.getSingleUser);
 router.patch(
+  "/vehicle-location/:id",
+  checkAuth(Role.DRIVER),
+  UserControllers.updateVehicleLocation
+);
+router.patch(
   "/:id",
   checkAuth(...Object.values(Role)),
   validateRequest(UpdateUserZodValidation),

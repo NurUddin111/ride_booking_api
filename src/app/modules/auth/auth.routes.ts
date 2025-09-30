@@ -21,6 +21,7 @@ router.post(
   AuthControllers.setPassword
 );
 router.post("/forgot-password", AuthControllers.forgotPassword);
+
 router.post(
   "/reset-password/:id",
   checkAuth(...Object.values(Role)),

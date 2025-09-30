@@ -33,6 +33,7 @@ interface IEnvConfig {
   REDIS_PASSWORD: string;
   REDIS_HOST: string;
   REDIS_PORT: string;
+  GEOAPIFY_API_KEY: string;
 }
 
 const loadEnvVariables = (): IEnvConfig => {
@@ -65,6 +66,7 @@ const loadEnvVariables = (): IEnvConfig => {
     "REDIS_PASSWORD",
     "REDIS_HOST",
     "REDIS_PORT",
+    "GEOAPIFY_API_KEY",
   ];
 
   requiredEnvVariables.forEach((key) => {
@@ -104,6 +106,7 @@ const loadEnvVariables = (): IEnvConfig => {
     REDIS_PASSWORD: process.env.REDIS_PASSWORD as string,
     REDIS_HOST: process.env.REDIS_HOST as string,
     REDIS_PORT: process.env.REDIS_PORT as string,
+    GEOAPIFY_API_KEY: process.env.GEOAPIFY_API_KEY as string,
   };
 };
 

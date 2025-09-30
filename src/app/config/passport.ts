@@ -88,7 +88,6 @@ passport.use(
           user = await User.create({
             name: profile.displayName,
             email,
-            password: "",
             picture: profile.photos?.[0].value,
             role: Role.RIDER,
             isVerified: true,

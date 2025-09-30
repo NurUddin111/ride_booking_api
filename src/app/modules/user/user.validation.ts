@@ -1,6 +1,60 @@
 import z from "zod";
 import { IsActive, Role } from "./user.interface";
 
+const documentSchemaValidation = z.object({
+  drivingLicense: z
+    .string()
+    .trim()
+    .min(1, { message: "Driving license is required." })
+    .optional(),
+  nidOrPassport: z
+    .string()
+    .trim()
+    .min(1, { message: "NID or Passport is required." })
+    .optional(),
+  vehicleRegistration: z
+    .string()
+    .trim()
+    .min(1, { message: "Vehicle registration is required." })
+    .optional(),
+});
+
+export const vehicleInfoSchemaValidation = z.object({
+  vehicleLocation: z
+    .object({
+      coordinates: z.object({
+        lat: z.number().optional(),
+        lng: z.number().optional(),
+      }),
+      address: z
+        .string({
+          error: () => {
+            return "Invalid address!";
+          },
+        })
+        .max(500, { message: "Address cannot exceed 500 characters." })
+        .optional(),
+    })
+    .optional(),
+  vehicleType: z
+    .string()
+    .trim()
+    .min(1, { message: "Vehicle type is required." })
+    .optional(),
+  vehicleModel: z
+    .string()
+    .trim()
+    .min(1, { message: "Vehicle model is required." })
+    .optional(),
+  vehicleNumberPlate: z
+    .string()
+    .trim()
+    .min(1, { message: "Vehicle number plate is required." })
+    .optional(),
+
+  documents: documentSchemaValidation.optional(),
+});
+
 const CreateUserZodValidation = z.object({
   name: z
     .string({
@@ -94,10 +148,11 @@ const CreateUserZodValidation = z.object({
     })
     .optional(),
 
-  vehicle: z
-    .string({
+  vehicleInfo: vehicleInfoSchemaValidation.optional(),
+  isDriverApproved: z
+    .boolean({
       error: () => {
-        return "Invalid vehicle!";
+        return "isDriverApproved value must be true or false.";
       },
     })
     .optional(),
@@ -196,10 +251,11 @@ const UpdateUserZodValidation = z.object({
     .max(500, { message: "Address cannot exceed 500 characters." })
     .optional(),
 
-  vehicle: z
-    .string({
+  vehicleInfo: vehicleInfoSchemaValidation.optional(),
+  isDriverApproved: z
+    .boolean({
       error: () => {
-        return "Invalid vehicle!";
+        return "isDriverApproved value must be true or false.";
       },
     })
     .optional(),

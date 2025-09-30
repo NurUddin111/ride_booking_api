@@ -7,33 +7,91 @@ import { envVars } from "../config/env";
 import { JwtPayload } from "jsonwebtoken";
 import { User } from "../modules/user/user.model";
 import { checkUserStatus } from "../utils/checkUserStatus";
-import { IUser } from "../modules/user/user.interface";
+import { IsActive, IUser, Role } from "../modules/user/user.interface";
+import { HydratedDocument } from "mongoose";
 
 export const checkAuth = (...authRoles: string[]) =>
   catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const accessToken = req.cookies.accessToken;
+
     if (!accessToken) {
       throw new AppError(HttpStatusCodes.UNAUTHORIZED, "No Token Recieved");
     }
 
-    const verifiedToken = verifyToken(
+    const verifiedAccessToken = verifyToken(
       accessToken,
       envVars.JWT_ACCESS_SECRET
     ) as JwtPayload;
 
-    const email = verifiedToken.email;
+    const userRole = verifiedAccessToken.role;
+    const userId = verifiedAccessToken.userId;
 
-    const user = (await User.findOne({ email })) as IUser;
-
-    checkUserStatus(user);
-
-    if (!authRoles.includes(verifiedToken.role)) {
+    if (!authRoles.includes(userRole)) {
       throw new AppError(
         HttpStatusCodes.UNAUTHORIZED,
         "You are not permitted to view this route!!!"
       );
     }
 
-    req.user = verifiedToken;
+    if (userRole === Role.DRIVER) {
+      const driverId = userId;
+      const driver = (await User.findById(driverId)) as HydratedDocument<IUser>;
+
+      if (!driver.vehicleInfo) {
+        throw new AppError(
+          HttpStatusCodes.BAD_REQUEST,
+          "You aren't authorized since you haven't submitted your vehicle information!"
+        );
+      }
+
+      if (driver.vehicleInfo && !driver.isDriverApproved) {
+        throw new AppError(
+          HttpStatusCodes.BAD_REQUEST,
+          "Your vehicle details are pending approval. You'll be able to perform this action once approved. Please review and update if needed."
+        );
+      }
+    }
+
+    const email = verifiedAccessToken.email;
+    const user = (await User.findOne({ email })) as HydratedDocument<IUser>;
+
+    const blockedToken = req.cookies.blockedToken;
+    const inActiveToken = req.cookies.inActiveToken;
+
+    if (blockedToken) {
+      const verifiedBlockedToken = verifyToken(
+        blockedToken,
+        email
+      ) as JwtPayload;
+      if (!verifiedBlockedToken) {
+        user.isActive = IsActive.ACTIVE;
+        await user.save();
+        res.clearCookie("blockedToken", {
+          httpOnly: true,
+          secure: false,
+          sameSite: "lax",
+        });
+      }
+    }
+
+    if (inActiveToken) {
+      const verifiedInActiveToken = verifyToken(
+        inActiveToken,
+        email
+      ) as JwtPayload;
+      if (verifiedInActiveToken) {
+        user.isActive = IsActive.ACTIVE;
+        await user.save();
+        res.clearCookie("inActiveToken", {
+          httpOnly: true,
+          secure: false,
+          sameSite: "lax",
+        });
+      }
+    }
+
+    checkUserStatus(user);
+
+    req.user = verifiedAccessToken;
     next();
   });

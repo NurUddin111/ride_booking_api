@@ -5,7 +5,7 @@ import { User } from "../user/user.model";
 import { redisClient } from "../../config/redis.config";
 import { sendEmail } from "../../utils/sendEmail";
 
-const OTP_EXPIRATION = 2 * 60;
+// const OTP_EXPIRATION = 2 * 60;
 
 const generateOTP = (length = 6) => {
   const otp = crypto.randomInt(10 ** (length - 1), 10 ** length).toString();
@@ -13,7 +13,13 @@ const generateOTP = (length = 6) => {
   return otp;
 };
 
-const sendOTP = async (name: string, email: string) => {
+const sendOTP = async (
+  email: string,
+  sub: string,
+  tempName: string,
+  tempData: Record<string, unknown>,
+  OTP_EXPIRATION: number
+) => {
   const otp = generateOTP();
 
   const redisKey = `otp:${email}`;
@@ -27,11 +33,11 @@ const sendOTP = async (name: string, email: string) => {
 
   await sendEmail({
     to: email,
-    subject: `${otp} is your Let's Ride verification code`,
-    templateName: "otp",
+    subject: `${otp} is your ${sub}`,
+    templateName: `${tempName}`,
     templateData: {
-      name: name,
       otp: otp,
+      ...tempData,
     },
   });
 };

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Confirm Your Ride Request</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+          "Segoe UI Symbol";
+        font-size: 16px;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px 40px;
+      }
+      h2 {
+        font-size: 24px;
+        color: #1a1a1a;
+        margin: 0 0 10px 0;
+      }
+      p {
+        font-size: 16px;
+        line-height: 1.5;
+        color: #555555;
+        margin: 0 0 20px 0;
+      }
+      .otp-box {
+        background-color: #f0f0f0;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        padding: 15px 20px;
+        text-align: center;
+        margin: 20px 0;
+      }
+      .otp-code {
+        font-size: 24px;
+        font-weight: bold;
+        letter-spacing: 2px;
+        margin: 0;
+        color: #1a1a1a;
+      }
+      .footer {
+        text-align: center;
+        padding: 40px 0 20px 0;
+        color: #999999;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+      .footer a {
+        color: #999999;
+        text-decoration: none;
+      }
+      .footer a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <p>Hello <%= riderName %>,</p>
+      <h2>Your Ride is Confirmed 🚖</h2>
+      <p>Please provide this verification code to the driver to get started:</p>
+      <div class="otp-box">
+        <p class="otp-code"><%= otp %></p>
+      </div>
+      <p style="font-size: 14px; color: #777777">
+        Verification codes expire after two hours.
+      </p>
+      <h4>Here are your ride details:</h4>
+
+      <div class="details-box">
+        <p><span class="label">Driver:</span> <%= driverName %></p>
+        <p>
+          <span class="label">Vehicle:</span> <%= vehicleModel %> (<%=
+          vehicleNumber %>)
+        </p>
+        <p><span class="label">Pickup:</span> <%= pickUpAddress %></p>
+        <p><span class="label">Destination:</span> <%= destinationAddress %></p>
+        <p><span class="label">Estimated Arrival:</span> <%= eta %> minutes</p>
+        <p>
+          <span class="label">Fare Estimate:</span> ৳ <%= fareEstimateMin %> -
+          <%= fareEstimateMax %>
+        </p>
+      </div>
+
+      <p>
+        Please be ready at your pickup location. For your safety, share this
+        ride only with your driver:
+      </p>
+      <div class="details-box">
+        <p><span class="label">Ride ID:</span> <%= rideId %></p>
+      </div>
+
+      <p>Thanks for riding with Let's Ride. Safe travels!</p>
+
+      <div class="footer">
+        <a href="#">Help</a> | <a href="#">Service</a>
+        <p style="margin-top: 10px">
+          &copy; <%= new Date().getFullYear() %> Let's Ride. All rights
+          reserved.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
