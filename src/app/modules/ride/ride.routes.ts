@@ -23,6 +23,12 @@ router.get(
   RideControllers.getAllRidesData
 );
 
+router.get(
+  "/my-rides",
+  checkAuth(...Object.values(Role)),
+  RideControllers.getMyRidesData
+);
+
 router.get("/:id", checkAuth(Role.ADMIN), RideControllers.getSingleRideData);
 
 router.post(
@@ -41,6 +47,12 @@ router.post(
   "/update-ride/:id",
   checkAuth(Role.DRIVER),
   RideControllers.updateRideRequest
+);
+
+router.get(
+  "/view-earnings/:id",
+  checkAuth(Role.DRIVER),
+  RideControllers.viewEarnings
 );
 
 export const RideRoutes = router;

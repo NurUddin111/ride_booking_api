@@ -9,7 +9,7 @@ import {
   calculateDistance,
   calculateFare,
 } from "../../utils/fareCalculationFormula";
-import { RATES } from "./ride.constants";
+import { RATES, rideSearchAbleFields } from "./ride.constants";
 import { validatePassengerCount } from "../../utils/validatePassengerCount";
 import { IRide, RIDE_STATUS } from "./ride.interface";
 import { User } from "../user/user.model";
@@ -19,6 +19,7 @@ import { setAuthCookie } from "../../utils/setCookie";
 import { Response } from "express";
 import { OTPServices } from "../otp/otp.service";
 import moment from "moment";
+import { QueryBuilder } from "../../utils/queryBuilder";
 
 const createRideRequest = async (
   decodedToken: JwtPayload,
@@ -128,6 +129,11 @@ const createRideRequest = async (
     distanceInKm: totalDistance,
     fareEstimate: { min: minEstFare, max: maxEstFare },
   });
+
+  const rideId = ride._id;
+  rider.bookings?.push(rideId);
+  await rider.save();
+
   return ride;
 };
 
@@ -139,16 +145,24 @@ const getPendingRideRequests = async () => {
   return { rideRequests };
 };
 
-const getAllRidesData = async () => {
-  const allRides = await Ride.find();
+const getAllRidesData = async (query: Record<string, string>) => {
+  const queryBuilder = new QueryBuilder(Ride.find(), query);
+  const usersData = queryBuilder
+    .filter()
+    .search(rideSearchAbleFields)
+    .sort()
+    .fields()
+    .paginate();
 
-  if (allRides.length === 0) {
-    throw new AppError(
-      HttpStatusCodes.NOT_FOUND,
-      "Couldn't find any Ride Data"
-    );
-  }
-  return { allRides };
+  const [data, meta] = await Promise.all([
+    usersData.build(),
+    queryBuilder.getMeta(),
+  ]);
+
+  return {
+    data,
+    meta,
+  };
 };
 
 const getSingleRideData = async (rideId: string) => {
@@ -158,6 +172,20 @@ const getSingleRideData = async (rideId: string) => {
     throw new AppError(HttpStatusCodes.NOT_FOUND, "Invalid Ride Id");
   }
   return { ride };
+};
+
+const getMyRidesData = async (userId: string) => {
+  const allRides = await Ride.find({
+    $or: [{ riderId: userId }, { driverId: userId }],
+  });
+
+  if (allRides.length === 0) {
+    throw new AppError(
+      HttpStatusCodes.NOT_FOUND,
+      "Couldn't find any Ride Data"
+    );
+  }
+  return { allRides };
 };
 
 const acceptRideRequest = async (rideId: string, decodedToken: JwtPayload) => {
@@ -271,6 +299,11 @@ const acceptRideRequest = async (rideId: string, decodedToken: JwtPayload) => {
     ride.rideHistory.acceptedAt = new Date();
     await ride.save();
     await OTPServices.sendOTP(email, sub, temp, tempData, OTP_EXPIRATION);
+
+    const rideId = ride._id;
+    driver.bookings?.push(rideId);
+    await driver.save();
+
     return {
       message: `You've accepted the ride. Navigate to the pickup point: ${pickUpAddress}.`,
       ride,
@@ -544,8 +577,53 @@ const updateRideRequest = async (
 
   throw new AppError(
     HttpStatusCodes.BAD_REQUEST,
-    `You can't set ${rideStatus} now since the ride status is ${ride.status}. Right sequence is ACCEPTED->VEHICLE_ARRIVED->ONGOING->COMPLETED`
+    `You can't set ${rideStatus} now since the ride status is ${ride.status}. Right sequence is ACCEPTED -> VEHICLE_ARRIVED -> ONGOING -> COMPLETED`
   );
+};
+
+const viewEarnings = async (decodedToken: JwtPayload) => {
+  const driverId = decodedToken.userId;
+  const driver = (await User.findById(driverId).populate(
+    "bookings",
+    "_id status totalPassengers distanceInKm rideHistory.totalFare"
+  )) as HydratedDocument<IUser>;
+
+  if (!driver) {
+    throw new AppError(HttpStatusCodes.NOT_FOUND, "Driver not found");
+  }
+
+  const allRides = driver.bookings as unknown as IRide[];
+
+  if (!allRides || allRides.length === 0) {
+    throw new AppError(HttpStatusCodes.NOT_FOUND, "No rides found");
+  }
+
+  const completedRides = allRides.filter(
+    (ride) => ride.status === RIDE_STATUS.COMPLETED
+  );
+
+  const totalEarnings = completedRides.reduce((sum, ride) => {
+    const fare = ride.rideHistory.totalFare || 0;
+    return sum + fare;
+  }, 0);
+
+  const totalRides = completedRides.length;
+  const averageFare = totalRides > 0 ? totalEarnings / totalRides : 0;
+
+  const sortedRides = completedRides.sort(
+    (a, b) =>
+      new Date(b.rideHistory?.completedAt || "").getTime() -
+      new Date(a.rideHistory?.completedAt || "").getTime()
+  );
+
+  return {
+    summary: {
+      totalRides,
+      totalEarnings,
+      averageFare: averageFare.toFixed(2),
+    },
+    rides: sortedRides,
+  };
 };
 
 export const RideServices = {
@@ -553,7 +631,9 @@ export const RideServices = {
   getPendingRideRequests,
   getAllRidesData,
   getSingleRideData,
+  getMyRidesData,
   cancelRideRequest,
   acceptRideRequest,
   updateRideRequest,
+  viewEarnings,
 };

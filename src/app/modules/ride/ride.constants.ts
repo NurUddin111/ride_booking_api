@@ -24,3 +24,5 @@ export const RATES = {
     minimumFare: 200,
   },
 };
+
+export const rideSearchAbleFields = ["riderId","driverId","vehicleType","status"]
