@@ -14,20 +14,22 @@ import { envVars } from "./env";
 import passport from "passport";
 import { checkUserStatus } from "../utils/checkUserStatus";
 import { HydratedDocument } from "mongoose";
+import { Request } from "express";
 
 passport.use(
   new LocalStrategy(
     {
       usernameField: "email",
       passwordField: "password",
+      passReqToCallback: true,
     },
-    async (email: string, password: string, done: any) => {
+    async (req: Request, email: string, password: string, done: any) => {
       try {
         const user = (await User.findOne({ email }).select(
           "+password"
         )) as HydratedDocument<IUser>;
 
-        checkUserStatus(user);
+        checkUserStatus(req, user, email);
 
         const isGoogleAuthenticated = user.auths.some(
           (providerObject) => providerObject.provider === "google"
@@ -64,8 +66,10 @@ passport.use(
       clientID: envVars.GOOGLE_CLIENT_ID,
       clientSecret: envVars.GOOGLE_CLIENT_SECRET,
       callbackURL: envVars.GOOGLE_CALLBACK_URL,
+      passReqToCallback: true,
     },
     async (
+      req: Request,
       accessToken: string,
       refreshToke: string,
       profile: Profile,
@@ -102,7 +106,7 @@ passport.use(
           return done(null, user);
         }
 
-        checkUserStatus(user);
+        checkUserStatus(req, user, email as string);
 
         const isCredentialsAuthenticated = user.auths.some(
           (providerObject) => providerObject.provider === "credentials"

@@ -147,7 +147,7 @@ const userSchema = new Schema<IUser>(
 
     auths: [authProviderSchema],
     bookings: {
-      type: [{ type: Schema.Types.ObjectId, ref: "Bookings" }],
+      type: [{ type: Schema.Types.ObjectId, ref: "Ride" }],
     },
     penalties: { type: Number, default: null },
   },

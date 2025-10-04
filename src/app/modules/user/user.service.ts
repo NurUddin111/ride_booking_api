@@ -12,6 +12,8 @@ import { JwtPayload } from "jsonwebtoken";
 import { RedisServices } from "../redis/redis.service";
 import { HydratedDocument } from "mongoose";
 import { geocodeAddress } from "../../utils/geoApiFy";
+import { userSearchableFields } from "./user.constants";
+import { QueryBuilder } from "../../utils/queryBuilder";
 
 const createUserRequest = async (
   res: Response,
@@ -175,9 +177,24 @@ const createUserSuccess = async (
   return user;
 };
 
-const getAllUsers = async () => {
-  const users = User.find();
-  return users;
+const getAllUsers = async (query: Record<string, string>) => {
+  const queryBuilder = new QueryBuilder(User.find(), query);
+  const usersData = queryBuilder
+    .filter()
+    .search(userSearchableFields)
+    .sort()
+    .fields()
+    .paginate();
+
+  const [data, meta] = await Promise.all([
+    usersData.build(),
+    queryBuilder.getMeta(),
+  ]);
+
+  return {
+    data,
+    meta,
+  };
 };
 
 const getSingleUser = async (userId: string) => {
@@ -233,10 +250,14 @@ const updateUser = async (
     }
   }
 
-  if (
-    payload.vehicleInfo?.isDriverApproved &&
-    decodedToken.role !== Role.ADMIN
-  ) {
+  if (payload.vehicleInfo && payload.role !== Role.DRIVER) {
+    throw new AppError(
+      HttpStatusCodes.BAD_REQUEST,
+      "If you want to submit your vehicle information,please select your role as driver"
+    );
+  }
+
+  if (payload.isDriverApproved && decodedToken.role !== Role.ADMIN) {
     throw new AppError(
       HttpStatusCodes.BAD_REQUEST,
       "You can't set your driving approval status by yourself.Please submit your vehicle information or if you have already submitted then plese wait for 1-2 business days. We will inform after we finish checking your vehicle information."
@@ -250,6 +271,13 @@ const updateUser = async (
         "This is a restricted action. For security, only Admin can update these information."
       );
     }
+  }
+
+  if (payload.isOnline && !user.isDriverApproved) {
+    throw new AppError(
+      HttpStatusCodes.FORBIDDEN,
+      "You can set your availibility status after you get driver approval only."
+    );
   }
 
   const updatedUser = await User.findByIdAndUpdate(userId, payload, {

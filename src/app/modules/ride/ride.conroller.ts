@@ -45,13 +45,14 @@ const getPendingRideRequests = catchAsync(
 
 const getAllRidesData = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const ride = await RideServices.getAllRidesData();
+    const query = req.query as Record<string, string>;
+    const rides = await RideServices.getAllRidesData(query);
 
     sendResponse(res, {
       success: true,
       statusCode: HttpStatusCodes.CREATED,
       message: "All Rides Retrieved successfully",
-      data: ride,
+      data: rides,
     });
   }
 );
@@ -67,6 +68,21 @@ const getSingleRideData = catchAsync(
       statusCode: HttpStatusCodes.CREATED,
       message: "Ride Data Retrieved successfully",
       data: ride,
+    });
+  }
+);
+
+const getMyRidesData = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user as JwtPayload;
+    const userId = decodedToken.userId;
+    const rides = await RideServices.getMyRidesData(userId);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: HttpStatusCodes.CREATED,
+      message: "All Rides Retrieved successfully",
+      data: rides,
     });
   }
 );
@@ -130,12 +146,28 @@ const updateRideRequest = catchAsync(
   }
 );
 
+const viewEarnings = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user as JwtPayload;
+    const rides = await RideServices.viewEarnings(decodedToken);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: HttpStatusCodes.CREATED,
+      message: "Rides Summary Retrieved successfully",
+      data: rides,
+    });
+  }
+);
+
 export const RideControllers = {
   createRideRequest,
   getPendingRideRequests,
   getAllRidesData,
   getSingleRideData,
+  getMyRidesData,
   cancleRideRequest,
   acceptRideRequest,
   updateRideRequest,
+  viewEarnings,
 };

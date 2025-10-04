@@ -61,7 +61,8 @@ const createUserSuccess = catchAsync(
 
 const getAllUsers = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const users = await UserServices.getAllUsers();
+    const query = req.query as Record<string, string>;
+    const users = await UserServices.getAllUsers(query);
     sendResponse(res, {
       success: true,
       statusCode: HttpStatusCodes.OK,

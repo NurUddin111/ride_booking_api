@@ -7,7 +7,7 @@ import { envVars } from "../config/env";
 import { JwtPayload } from "jsonwebtoken";
 import { User } from "../modules/user/user.model";
 import { checkUserStatus } from "../utils/checkUserStatus";
-import { IsActive, IUser, Role } from "../modules/user/user.interface";
+import { IUser, Role } from "../modules/user/user.interface";
 import { HydratedDocument } from "mongoose";
 
 export const checkAuth = (...authRoles: string[]) =>
@@ -55,42 +55,7 @@ export const checkAuth = (...authRoles: string[]) =>
     const email = verifiedAccessToken.email;
     const user = (await User.findOne({ email })) as HydratedDocument<IUser>;
 
-    const blockedToken = req.cookies.blockedToken;
-    const inActiveToken = req.cookies.inActiveToken;
-
-    if (blockedToken) {
-      const verifiedBlockedToken = verifyToken(
-        blockedToken,
-        email
-      ) as JwtPayload;
-      if (!verifiedBlockedToken) {
-        user.isActive = IsActive.ACTIVE;
-        await user.save();
-        res.clearCookie("blockedToken", {
-          httpOnly: true,
-          secure: false,
-          sameSite: "lax",
-        });
-      }
-    }
-
-    if (inActiveToken) {
-      const verifiedInActiveToken = verifyToken(
-        inActiveToken,
-        email
-      ) as JwtPayload;
-      if (verifiedInActiveToken) {
-        user.isActive = IsActive.ACTIVE;
-        await user.save();
-        res.clearCookie("inActiveToken", {
-          httpOnly: true,
-          secure: false,
-          sameSite: "lax",
-        });
-      }
-    }
-
-    checkUserStatus(user);
+    checkUserStatus(req, user, email);
 
     req.user = verifiedAccessToken;
     next();
