@@ -1,5 +1,5 @@
 import z from "zod";
-import { IsActive, Role } from "./user.interface";
+import { Role } from "./user.interface";
 
 const documentSchemaValidation = z.object({
   drivingLicense: z
@@ -55,7 +55,7 @@ export const vehicleInfoSchemaValidation = z.object({
   documents: documentSchemaValidation.optional(),
 });
 
-const CreateUserZodValidation = z.object({
+const RegisterRequestZodSchemaValidation = z.object({
   name: z
     .string({
       error: (issue) =>
@@ -97,7 +97,13 @@ const CreateUserZodValidation = z.object({
       },
     })
     .optional(),
+});
 
+const RegisterVerificationZodSchemaValidation = z.object({
+  otp: z.string().min(6, "OTP must be at least 6 characters long"),
+});
+
+const RegisterSuccessZodSchemaValidation = z.object({
   password: z
     .string({
       error: (issue) =>
@@ -118,60 +124,9 @@ const CreateUserZodValidation = z.object({
         },
       }
     ),
-
-  phone: z
-    .string({
-      error: () => {
-        return "Invalid Phone";
-      },
-    })
-    .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
-      error: () => {
-        return "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX";
-      },
-    })
-    .optional(),
-
-  picture: z
-    .url({
-      error: () => {
-        return "Invalid url!";
-      },
-    })
-    .optional(),
-
-  address: z
-    .string({
-      error: () => {
-        return "Invalid address!";
-      },
-    })
-    .optional(),
-
-  vehicleInfo: vehicleInfoSchemaValidation.optional(),
-  isDriverApproved: z
-    .boolean({
-      error: () => {
-        return "isDriverApproved value must be true or false.";
-      },
-    })
-    .optional(),
-
-  role: z
-    .enum(Role, {
-      error: () => {
-        return "Invalid Role";
-      },
-    })
-    .refine((val) => val !== Role.ADMIN, {
-      error: () => {
-        return "You are not authorized to assign the ADMIN role.";
-      },
-    })
-    .optional(),
 });
 
-const UpdateUserZodValidation = z.object({
+const UpdateUserZodSchemaValidation = z.object({
   name: z
     .string({
       error: (issue) =>
@@ -221,27 +176,7 @@ const UpdateUserZodValidation = z.object({
       },
     })
     .optional(),
-  isActive: z
-    .enum(IsActive, {
-      error: () => {
-        return "Invalid Role.";
-      },
-    })
-    .optional(),
-  isDeleted: z
-    .boolean({
-      error: () => {
-        return "isDeleted must be true or false.";
-      },
-    })
-    .optional(),
-  isVerified: z
-    .boolean({
-      error: () => {
-        return "isVerified must be true or false.";
-      },
-    })
-    .optional(),
+
   address: z
     .string({
       error: () => {
@@ -252,7 +187,8 @@ const UpdateUserZodValidation = z.object({
     .optional(),
 
   vehicleInfo: vehicleInfoSchemaValidation.optional(),
-  isDriverApproved: z
+
+  isOnline: z
     .boolean({
       error: () => {
         return "isDriverApproved value must be true or false.";
@@ -261,4 +197,21 @@ const UpdateUserZodValidation = z.object({
     .optional(),
 });
 
-export { CreateUserZodValidation, UpdateUserZodValidation };
+const UpdateLocationZodSchemaValidation = z.object({
+  address: z
+    .string({
+      error: () => {
+        return "Invalid address!";
+      },
+    })
+    .max(500, { message: "Address cannot exceed 500 characters." })
+    .optional(),
+});
+
+export {
+  RegisterRequestZodSchemaValidation,
+  RegisterVerificationZodSchemaValidation,
+  RegisterSuccessZodSchemaValidation,
+  UpdateUserZodSchemaValidation,
+  UpdateLocationZodSchemaValidation,
+};

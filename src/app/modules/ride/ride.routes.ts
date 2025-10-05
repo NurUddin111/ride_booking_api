@@ -2,11 +2,14 @@ import { Router } from "express";
 import { checkAuth } from "../../middlewares/checkAuth";
 import { Role } from "../user/user.interface";
 import { RideControllers } from "./ride.conroller";
+import { validateRequest } from "../../middlewares/validateRequest";
+import { createRideZodSchema, updateRideZodSchema } from "./ride.validation";
 
 const router = Router();
 
 router.post(
   "/ride-request",
+  validateRequest(createRideZodSchema),
   checkAuth(...Object.values(Role)),
   RideControllers.createRideRequest
 );
@@ -45,6 +48,7 @@ router.post(
 
 router.post(
   "/update-ride/:id",
+  validateRequest(updateRideZodSchema),
   checkAuth(Role.DRIVER),
   RideControllers.updateRideRequest
 );

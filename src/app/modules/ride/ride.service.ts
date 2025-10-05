@@ -539,7 +539,7 @@ const updateRideRequest = async (
     rideHistory.startedAt = new Date();
     await ride.save();
     return {
-      message: `Ride status updated to ${ride.status} successfully!`,
+      message: `OTP has been verified and ride status updated to ${ride.status} successfully!`,
       ride,
     };
   }
