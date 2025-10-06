@@ -239,7 +239,7 @@ const acceptRideRequest = async (rideId: string, decodedToken: JwtPayload) => {
     );
   }
 
-  const driverLocation = driver.vehicleInfo.vehicleLocation;
+  const driverLocation = driver.vehicleInfo?.vehicleLocation;
 
   if (!driverLocation) {
     throw new AppError(

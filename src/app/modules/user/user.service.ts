@@ -312,6 +312,10 @@ const setVehicleLocation = async (
 ) => {
   const driverId = decodedToken.userId;
   const driver = (await User.findById(driverId)) as HydratedDocument<IUser>;
+  const vehicleInfo = driver.vehicleInfo;
+  if(!vehicleInfo){
+    throw new AppError(HttpStatusCodes.NOT_FOUND,"No Vehicle Info found")
+  }
   
   const addressCo = await geocodeAddress(address);
 
@@ -328,7 +332,7 @@ const setVehicleLocation = async (
 
   await RedisServices.setVehicleLocation(driverId, lng, lat);
 
-  driver.vehicleInfo.vehicleLocation = {
+  vehicleInfo.vehicleLocation = {
     coordinates: {
       lng: addressCo.longitude,
       lat: addressCo.latitude,
