@@ -201,6 +201,7 @@ npm run dev
 ## 📮 Postman Collection
 
 You can explore and test all the API endpoints using Postman.
+ 🔗 **[Ride Booking System – Postman Collection](https://api.postman.com/collections/46020985-28f401dc-b363-43c7-b0a9-77daa1b346d6?access_key=PMAT-01K6WD09C5A1E19M5H0B3BMSWQ)**
 
 Set the base URL: http://localhost:5000
 
