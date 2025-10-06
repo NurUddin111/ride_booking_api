@@ -200,7 +200,7 @@ npm run dev
 
 ## 📮 Postman Collection
 
-You can explore and test all the API endpoints using the Postman collection below:
+You can explore and test all the API endpoints using Postman.
 
 Set the base URL: http://localhost:5000
 
