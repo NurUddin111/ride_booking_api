@@ -15,7 +15,7 @@ export const checkAuth = (...authRoles: string[]) =>
     const accessToken = req.cookies.accessToken;
 
     if (!accessToken) {
-      throw new AppError(HttpStatusCodes.UNAUTHORIZED, "No Token Recieved");
+      throw new AppError(HttpStatusCodes.UNAUTHORIZED, "No access token received.Please login get new access token...");
     }
 
     const verifiedAccessToken = verifyToken(

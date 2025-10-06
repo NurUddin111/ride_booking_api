@@ -1,4 +1,4 @@
-import  { JwtPayload } from "jsonwebtoken";
+import { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { createNewAccessTokenWithRefreshToken } from "../../utils/userTokens";
 import { User } from "../user/user.model";
@@ -9,7 +9,7 @@ import { envVars } from "../../config/env";
 import { HydratedDocument } from "mongoose";
 import { checkUserStatus } from "../../utils/checkUserStatus";
 import { sendEmail } from "../../utils/sendEmail";
-import { Response } from "express";
+import { Request, Response } from "express";
 import { setAuthCookie } from "../../utils/setCookie";
 import { generateToken } from "../../utils/jwt";
 
@@ -123,12 +123,12 @@ const setPassword = async (userId: string, password: string) => {
   await user.save();
 };
 
-const forgotPassword = async (res: Response, email: string) => {
+const forgotPassword = async (req: Request, res: Response, email: string) => {
   const user = (await User.findOne({ email }).select(
     "+password"
   )) as HydratedDocument<IUser>;
 
-  checkUserStatus(user);
+  checkUserStatus(req, user, email);
 
   if (!user.password) {
     throw new AppError(

@@ -38,10 +38,9 @@ const createUserVerification = catchAsync(
 const createUserSuccess = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const verifiedCreationToken = req.cookies.verifiedCreationToken;
-    const { password, role } = req.body;
+    const password = req.body.password;
     const payload = {
       password: password,
-      role: role,
     };
 
     const user = await UserServices.createUserSuccess(

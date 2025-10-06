@@ -174,7 +174,7 @@ const forgotPassword = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const email = req.body.email;
 
-    await AuthServices.forgotPassword(res, email);
+    await AuthServices.forgotPassword(req, res, email);
 
     sendResponse(res, {
       success: true,
