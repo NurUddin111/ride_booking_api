@@ -57,8 +57,8 @@ interface IUser {
   phone?: string;
   picture?: string;
   address?: string;
-  role: Role;
-  vehicleInfo: IVehicleInfo;
+  role?: Role;
+  vehicleInfo?: IVehicleInfo;
   isDriverApproved?: boolean;
   isDeleted?: string;
   isActive?: IsActive;

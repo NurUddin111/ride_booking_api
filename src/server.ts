@@ -18,7 +18,7 @@ const startServer = async () => {
       console.log(`Server is listening to PORT ${envVars.PORT}`);
     });
   } catch (error) {
-    console.log("Failed to run server. Error:", error);
+    console.error("Failed to run server. Error:", error);
   }
 };
 

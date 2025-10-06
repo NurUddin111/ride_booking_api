@@ -8,9 +8,10 @@ export default defineConfig(
     eslint.configs.recommended,
     tseslint.configs.strict,
     tseslint.configs.stylistic,
+    tseslint.configs.stylistic,
     {
-        // rules: {
-        //     "no-console": "warn"
-        // }
+        rules: {
+            "no-console": "warn"
+        }
     }
 );

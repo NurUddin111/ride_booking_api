@@ -312,7 +312,7 @@ const setVehicleLocation = async (
 ) => {
   const driverId = decodedToken.userId;
   const driver = (await User.findById(driverId)) as HydratedDocument<IUser>;
-  console.log(address);
+  
   const addressCo = await geocodeAddress(address);
 
   if (!addressCo) {
@@ -324,8 +324,7 @@ const setVehicleLocation = async (
 
   const lng = Number(addressCo.longitude);
   const lat = Number(addressCo.latitude);
-  const add = addressCo.address;
-  console.log(lng, lat, add);
+
 
   await RedisServices.setVehicleLocation(driverId, lng, lat);
 

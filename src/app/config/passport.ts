@@ -53,7 +53,6 @@ passport.use(
 
         return done(null, user);
       } catch (error) {
-        console.log(error);
         done(error);
       }
     }
@@ -120,7 +119,6 @@ passport.use(
 
         return done(null, user);
       } catch (error) {
-        console.log(error);
         done(error);
       }
     }
@@ -136,9 +134,7 @@ passport.deserializeUser(
     try {
       const user = await User.findById(id);
       done(null, user);
-    } catch (error) {
-      console.error(error);
-      done(error);
+    } catch (error) {      done(error);
     }
   }
 );

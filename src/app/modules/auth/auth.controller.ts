@@ -65,7 +65,7 @@ const googleCallback = catchAsync(
           return next(new AppError(HttpStatusCodes.UNAUTHORIZED, err));
         }
         if (!user) {
-          console.log("Authentication failed:", info.message);
+          console.error("Authentication failed:", info.message);
           return res.status(HttpStatusCodes.BAD_REQUEST).json({
             success: false,
             message: info.message,
