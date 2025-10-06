@@ -56,47 +56,46 @@ This project focuses on **scalability**, **security**, and **clean API design**,
 
 ## 🧩 API Endpoints
 
-
 ---
 
 ### 👤 USER MODULE
 
----------------------------------------------------------------------------------------------------
-| METHOD |            ENDPOINT           |           BODY             |      DESCRIPTION          |
----------------------------------------------------------------------------------------------------
-| POST   | /api/v1/user/register-request | {                          | Create a new user         |
-|        |                               |  "name": "John Doe",       | registration request.     |
-|        |                               |  "email":"john@example.com"| Sends a 6 digit OTP to    |
-|        |                               | }                          | verify email.             |
----------------------------------------------------------------------------------------------------
-| POST   | /api/v1/user/register-verifi  | {                          | Verify user registration  |
-|        | cation                        |  "otp": "123456"           | using OTP.                |
-|        |                               | }                          |                           |
-|        |                               |                            |                           |
----------------------------------------------------------------------------------------------------
-| POST   | /api/v1/user/register-success | {                          | Complete user registration|
-|        |                               |  "password": "Abc123@&$",  |                           |
-|        |                               | }                          |                           |
----------------------------------------------------------------------------------------------------
-| GET    | /api/v1/user                  |                            | Get All Users(Admin Only) |
----------------------------------------------------------------------------------------------------
-| GET    | /api/v1/user/me               |                            | Get logged-in user profile|
----------------------------------------------------------------------------------------------------
-| GET    | /api/v1/user/:id              |                            | Get single user by Id     |
-|        |                               |                            | (Admin Only)              |
----------------------------------------------------------------------------------------------------
-| PATCH  | /api/v1/user/:id              | {                          | Update user details.      |
-|        |                               |  "name":"Mark Henry",      |                           |
-|        |                               |  "phone":"+880...",        |                           |
-|        |                               | ...                        |                           |
-|        |                               | }                          |                           |
----------------------------------------------------------------------------------------------------
-| PATCH  | /api/v1/user/vehicle-locat    | {                          | Update driver’s vehicle   |
-|        |  ion/:id                      |  "address":"...address"    | location                  |
-|        |                               | }                          |                           |
----------------------------------------------------------------------------------------------------
-| PATCH  | /api/v1/user/delete/:id       |                            | Soft delete a user        |
----------------------------------------------------------------------------------------------------
+    ---------------------------------------------------------------------------------------------------
+    | METHOD |            ENDPOINT           |           BODY             |      DESCRIPTION          |
+    ---------------------------------------------------------------------------------------------------
+    | POST   | /api/v1/user/register-request | {                          | Create a new user         |
+    |        |                               |  "name": "John Doe",       | registration request.     |
+    |        |                               |  "email":"john@example.com"| Sends a 6 digit OTP to    |
+    |        |                               | }                          | verify email.             |
+    ---------------------------------------------------------------------------------------------------
+    | POST   | /api/v1/user/register-verifi  | {                          | Verify user registration  |
+    |        | cation                        |  "otp": "123456"           | using OTP.                |
+    |        |                               | }                          |                           |
+    |        |                               |                            |                           |
+    ---------------------------------------------------------------------------------------------------
+    | POST   | /api/v1/user/register-success | {                          | Complete user registration|
+    |        |                               |  "password": "Abc123@&$",  |                           |
+    |        |                               | }                          |                           |
+    ---------------------------------------------------------------------------------------------------
+    | GET    | /api/v1/user                  |                            | Get All Users(Admin Only) |
+    ---------------------------------------------------------------------------------------------------
+    | GET    | /api/v1/user/me               |                            | Get logged-in user profile|
+    ---------------------------------------------------------------------------------------------------
+    | GET    | /api/v1/user/:id              |                            | Get single user by Id     |
+    |        |                               |                            | (Admin Only)              |
+    ---------------------------------------------------------------------------------------------------
+    | PATCH  | /api/v1/user/:id              | {                          | Update user details.      |
+    |        |                               |  "name":"Mark Henry",      |                           |
+    |        |                               |  "phone":"+880...",        |                           |
+    |        |                               | ...                        |                           |
+    |        |                               | }                          |                           |
+    ---------------------------------------------------------------------------------------------------
+    | PATCH  | /api/v1/user/vehicle-locat    | {                          | Update driver’s vehicle   |
+    |        |  ion/:id                      |  "address":"...address"    | location                  |
+    |        |                               | }                          |                           |
+    ---------------------------------------------------------------------------------------------------
+    | PATCH  | /api/v1/user/delete/:id       |                            | Soft delete a user        |
+    ---------------------------------------------------------------------------------------------------
 
 ---
 
@@ -200,7 +199,8 @@ npm run dev
 
 ## 📮 Postman Collection
 
-You can explore and test all the API endpoints using Postman.
+You can explore and test all the API endpoints using the Postman collection below.
+
  🔗 **[Ride Booking System – Postman Collection](https://api.postman.com/collections/46020985-28f401dc-b363-43c7-b0a9-77daa1b346d6?access_key=PMAT-01K6WD09C5A1E19M5H0B3BMSWQ)**
 
 Set the base URL: http://localhost:5000
