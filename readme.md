@@ -101,141 +101,142 @@ This project focuses on **scalability**, **security**, and **clean API design**,
 
 ### 🔐 AUTH MODULE
 
----------------------------------------------------------------------------------------------------
-| METHOD |            ENDPOINT           |           BODY             |      DESCRIPTION          |
----------------------------------------------------------------------------------------------------
-| POST   | /api/v1/auth/login            |                            | Login using email and     |
-|        |                               |                            | password                  |
----------------------------------------------------------------------------------------------------
-| GET    | /api/v1/auth/google           |                            | Login via Google OAuth    |
----------------------------------------------------------------------------------------------------
-| GET    | /api/v1/auth/google/callback  |                            | Google login callback     |
-|        |                               |                            | handler                   |
----------------------------------------------------------------------------------------------------
-| POST   | /api/v1/auth/refresh-token    |                            | Get a new access token    |
----------------------------------------------------------------------------------------------------
-| POST   | /api/v1/auth/logout           |                            | Logout user (invalidate   |
-|        |                               |                            | token)                    |
----------------------------------------------------------------------------------------------------
-| POST   | /api/v1/auth/change-password  | {                          | Change user password      |
-|        |                               |  "oldPass": "123...",      |                           |
-|        |                               |  "newPass": "654...",      |                           |
-|        |                               |  "confirmNewPass": "654..."|                           |
-|        |                               | }                          |                           |
----------------------------------------------------------------------------------------------------
-| POST   | /api/v1/auth/set-password     | {                          | Set new password (for     |
-|        |                               |  "password": "123456"      | first-time login)         |
-|        |                               | }                          |                           |
----------------------------------------------------------------------------------------------------
-| POST   | /api/v1/auth/forgot-password  | {                          | Send reset link to user   |
-|        |                               |  "email":"john@example.com"| email                     |
-|        |                               | }                          |                           |
----------------------------------------------------------------------------------------------------
-| POST   | /api/v1/auth/reset-passw      | {                          | Reset password using token|
-|        | ord/:id                       |  "newPass":"654...",       |                           |
-|        |                               |  "confirmNewPass":"654..." |                           |
-|        |                               | }                          |                           |
----------------------------------------------------------------------------------------------------
+    ---------------------------------------------------------------------------------------------------
+    | METHOD |            ENDPOINT           |           BODY             |      DESCRIPTION          |
+    ---------------------------------------------------------------------------------------------------
+    | POST   | /api/v1/auth/login            |                            | Login using email and     |
+    |        |                               |                            | password                  |
+    ---------------------------------------------------------------------------------------------------
+    | GET    | /api/v1/auth/google           |                            | Login via Google OAuth    |
+    ---------------------------------------------------------------------------------------------------
+    | GET    | /api/v1/auth/google/callback  |                            | Google login callback     |
+    |        |                               |                            | handler                   |
+    ---------------------------------------------------------------------------------------------------
+    | POST   | /api/v1/auth/refresh-token    |                            | Get a new access token    |
+    ---------------------------------------------------------------------------------------------------
+    | POST   | /api/v1/auth/logout           |                            | Logout user (invalidate   |
+    |        |                               |                            | token)                    |
+    ---------------------------------------------------------------------------------------------------
+    | POST   | /api/v1/auth/change-password  | {                          | Change user password      |
+    |        |                               |  "oldPass": "123...",      |                           |
+    |        |                               |  "newPass": "654...",      |                           |
+    |        |                               |  "confirmNewPass": "654..."|                           |
+    |        |                               | }                          |                           |
+    ---------------------------------------------------------------------------------------------------
+    | POST   | /api/v1/auth/set-password     | {                          | Set new password (for     |
+    |        |                               |  "password": "123456"      | first-time login)         |
+    |        |                               | }                          |                           |
+    ---------------------------------------------------------------------------------------------------
+    | POST   | /api/v1/auth/forgot-password  | {                          | Send reset link to user   |
+    |        |                               |  "email":"john@example.com"| email                     |
+    |        |                               | }                          |                           |
+    ---------------------------------------------------------------------------------------------------
+    | POST   | /api/v1/auth/reset-passw      | {                          | Reset password using token|
+    |        | ord/:id                       |  "newPass":"654...",       |                           |
+    |        |                               |  "confirmNewPass":"654..." |                           |
+    |        |                               | }                          |                           |
+    ---------------------------------------------------------------------------------------------------
 
 ---
 
 ### 🚖 RIDE MODULE
 
----------------------------------------------------------------------------------------------------
-| METHOD |            ENDPOINT           |           BODY             |       DESCRIPTION         |
----------------------------------------------------------------------------------------------------
-| POST   | /api/v1/ride/ride-request     | {                          | Create a ride request     |
-|        |                               |  "totalPassengers": "2",   | (Rider/Driver/Admin)      |
-|        |                               |  "vehicleType": "CAR",     |                           |
-|        |                               |  "pickupAddress":"Khulshi",|                           |
-|        |                               |  "destinationAddress":"CRB"|                           |
-|        |                               | }                          |                           |
----------------------------------------------------------------------------------------------------
-| GET    | /api/v1/ride/pending-ride-re  |                            | Get all pending ride      |
-|        | quests                        |                            |requests (Driver/Admin)    |
----------------------------------------------------------------------------------------------------
-| GET    | /api/v1/ride/all-rides        |                            | Get all rides (Admin only)|
----------------------------------------------------------------------------------------------------
-| GET    | /api/v1/ride/my-rides         |                            |Get rides for logged-in    |
-|        |                               |                            |user/driver                |
----------------------------------------------------------------------------------------------------
-| GET    | /api/v1/ride/:id              |                            | Get single ride           |
-|        |                               |                            |details (Admin)            |
----------------------------------------------------------------------------------------------------
-| POST   | /api/v1/ride/accept-ride/:id  |                            | Accept ride request       |
-|        |                               |                            |(Driver)                   |
----------------------------------------------------------------------------------------------------
-| POST   | /api/v1/ride/cancel-ride/:id  |                            | Cancel ride (Rider/Driver/|
-|        |                               |                            | Admin)                    |
----------------------------------------------------------------------------------------------------
-| POST   | /api/v1/ride/update-ride/:id  | {                          | Update ride status or     |
-|        |                               |  "rideStatus": "ONGOING"   | details                   |
-|        |                               | }                          | details                   |
----------------------------------------------------------------------------------------------------
-| GET    | /api/v1/ride/view-earnings/:id|                            | View driver’s earnings    |
----------------------------------------------------------------------------------------------------
+    ---------------------------------------------------------------------------------------------------
+    | METHOD |            ENDPOINT           |           BODY             |       DESCRIPTION         |
+    ---------------------------------------------------------------------------------------------------
+    | POST   | /api/v1/ride/ride-request     | {                          | Create a ride request     |
+    |        |                               |  "totalPassengers": "2",   | (Rider/Driver/Admin)      |
+    |        |                               |  "vehicleType": "CAR",     |                           |
+    |        |                               |  "pickupAddress":"Khulshi",|                           |
+    |        |                               |  "destinationAddress":"CRB"|                           |
+    |        |                               | }                          |                           |
+    ---------------------------------------------------------------------------------------------------
+    | GET    | /api/v1/ride/pending-ride-re  |                            | Get all pending ride      |
+    |        | quests                        |                            |requests (Driver/Admin)    |
+    ---------------------------------------------------------------------------------------------------
+    | GET    | /api/v1/ride/all-rides        |                            | Get all rides (Admin only)|
+    ---------------------------------------------------------------------------------------------------
+    | GET    | /api/v1/ride/my-rides         |                            |Get rides for logged-in    |
+    |        |                               |                            |user/driver                |
+    ---------------------------------------------------------------------------------------------------
+    | GET    | /api/v1/ride/:id              |                            | Get single ride           |
+    |        |                               |                            |details (Admin)            |
+    ---------------------------------------------------------------------------------------------------
+    | POST   | /api/v1/ride/accept-ride/:id  |                            | Accept ride request       |
+    |        |                               |                            |(Driver)                   |
+    ---------------------------------------------------------------------------------------------------
+    | POST   | /api/v1/ride/cancel-ride/:id  |                            | Cancel ride (Rider/Driver/|
+    |        |                               |                            | Admin)                    |
+    ---------------------------------------------------------------------------------------------------
+    | POST   | /api/v1/ride/update-ride/:id  | {                          | Update ride status or     |
+    |        |                               |  "rideStatus": "ONGOING"   | details                   |
+    |        |                               | }                          | details                   |
+    ---------------------------------------------------------------------------------------------------
+    | GET    | /api/v1/ride/view-earnings/:id|                            | View driver’s earnings    |
+    ---------------------------------------------------------------------------------------------------
 
 
 ## ⚙️ Installation & Setup
 
-```bash
-# Clone the repository
-git clone https://github.com/NurUddin111/ride_booking_api.git
+    ```bash
+    # Clone the repository
+    git clone https://github.com/NurUddin111/ride_booking_api.git
 
-# Navigate to the project directory
-cd ride-booking-api
+    # Navigate to the project directory
+    cd ride-booking-api
 
-# Install dependencies
-npm install
+    # Install dependencies
+    npm install
 
-# Create an .env file
-cp .env.example .env
-# (Add your environment variables)
+    # Create an .env file
+    cp .env.example .env
+    # (Add your environment variables)
 
-# Run the development server
-npm run dev
+    # Run the development server
+    npm run dev
 
-🧪 Testing the API
+    🧪 Testing the API
 
 ## 📮 Postman Collection
 
-You can explore and test all the API endpoints using the Postman collection below.
+    You can explore and test all the API endpoints using the Postman collection below.
 
- 🔗 **[Ride Booking System – Postman Collection](https://api.postman.com/collections/46020985-28f401dc-b363-43c7-b0a9-77daa1b346d6?access_key=PMAT-01K6WD09C5A1E19M5H0B3BMSWQ)**
+    🔗 **[Ride Booking System – Postman Collection](https://api.postman.com/collections/46020985-28f401dc-b363-43c7-b0a9-77daa1b346d6?access_key=PMAT-01K6WD09C5A1E19M5H0B3BMSWQ)**
 
-Set the base URL: http://localhost:5000
+    Set the base URL: http://localhost:5000
 
 📁 Folder Structure
 
-src/
-│               
-├── app/              
-│   ├── config/          
-│   ├── errorHelpers/         
-│   ├── helpers/        
-│   ├── interfaces/         
-│   ├── middlewares/         
-│   ├── modules/        
-│   ├── routes/         
-│   ├── utils/        
-│   └── constants.ts         
-│
-├── app.ts        
-└── server.ts
+    src/
+    │               
+    ├── app/              
+    │   ├── config/          
+    │   ├── errorHelpers/         
+    │   ├── helpers/        
+    │   ├── interfaces/         
+    │   ├── middlewares/         
+    │   ├── modules/        
+    │   ├── routes/         
+    │   ├── utils/        
+    │   └── constants.ts         
+    │
+    ├── app.ts        
+    └── server.ts
 
 🧠 Future Improvements
-Add real-time location tracking with Socket.io
+    Add real-time location tracking with Socket.io
 
-Implement payment gateway integration
+    Implement payment gateway integration
 
-Create frontend dashboard (Next.js / React)
+    Create frontend dashboard (Next.js / React)
 
-Add push notifications for ride updates
+    Add push notifications for ride updates
 
 👨‍💻 Author
-Muhammad Nur Uddin
 
-“Code. Learn. Repeat.”
-📧 nuruddinmuhammad38@gmail.com
-🌐 https://github.com/NurUddin111
-```
+    Muhammad Nur Uddin
+
+    “Code. Learn. Repeat.”
+    📧 nuruddinmuhammad38@gmail.com
+    🌐 https://github.com/NurUddin111
+    ```
