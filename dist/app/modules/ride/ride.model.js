@@ -38,7 +38,10 @@ const rideSchema = new mongoose_1.Schema({
         required: true,
         default: ride_interface_1.RIDE_STATUS.PENDING,
     },
-    distanceInKm: { type: Number, required: true },
+    destinationDistanceInKm: { type: Number, required: true },
+    pickUpDistanceInKm: { type: Number, default: null },
+    destinationEta: { type: Number, required: true },
+    driverEta: { type: Number, default: null },
     fareEstimate: {
         min: { type: Number, required: true },
         max: { type: Number, required: true },

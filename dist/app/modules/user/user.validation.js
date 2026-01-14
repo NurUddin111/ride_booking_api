@@ -3,25 +3,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateLocationZodSchemaValidation = exports.UpdateUserZodSchemaValidation = exports.RegisterSuccessZodSchemaValidation = exports.RegisterVerificationZodSchemaValidation = exports.RegisterRequestZodSchemaValidation = exports.vehicleInfoSchemaValidation = void 0;
+exports.UpdateLocationZodSchemaValidation = exports.BecomeDriverZodSchemaValidation = exports.UpdateUserZodSchemaValidation = exports.RegisterSuccessZodSchemaValidation = exports.RegisterVerificationZodSchemaValidation = exports.RegisterRequestZodSchemaValidation = exports.vehicleInfoSchemaValidation = void 0;
 const zod_1 = __importDefault(require("zod"));
 const user_interface_1 = require("./user.interface");
 const documentSchemaValidation = zod_1.default.object({
     drivingLicense: zod_1.default
         .string()
         .trim()
-        .min(1, { message: "Driving license is required." })
-        .optional(),
+        .min(1, { message: "Driving license is required." }),
     nidOrPassport: zod_1.default
         .string()
         .trim()
-        .min(1, { message: "NID or Passport is required." })
-        .optional(),
+        .min(1, { message: "NID or Passport is required." }),
     vehicleRegistration: zod_1.default
         .string()
         .trim()
-        .min(1, { message: "Vehicle registration is required." })
-        .optional(),
+        .min(1, { message: "Vehicle registration is required." }),
 });
 exports.vehicleInfoSchemaValidation = zod_1.default.object({
     vehicleLocation: zod_1.default
@@ -43,18 +40,15 @@ exports.vehicleInfoSchemaValidation = zod_1.default.object({
     vehicleType: zod_1.default
         .string()
         .trim()
-        .min(1, { message: "Vehicle type is required." })
-        .optional(),
-    vehicleModel: zod_1.default
+        .min(1, { message: "Vehicle type is required." }),
+    brand: zod_1.default
         .string()
         .trim()
-        .min(1, { message: "Vehicle model is required." })
-        .optional(),
+        .min(1, { message: "Vehicle model is required." }),
     vehicleNumberPlate: zod_1.default
         .string()
         .trim()
-        .min(1, { message: "Vehicle number plate is required." })
-        .optional(),
+        .min(1, { message: "Vehicle number plate is required." }),
     documents: documentSchemaValidation.optional(),
 });
 const RegisterRequestZodSchemaValidation = zod_1.default.object({
@@ -175,16 +169,19 @@ const UpdateUserZodSchemaValidation = zod_1.default.object({
     })
         .max(500, { message: "Address cannot exceed 500 characters." })
         .optional(),
-    vehicleInfo: exports.vehicleInfoSchemaValidation.optional(),
     isOnline: zod_1.default
         .boolean({
         error: () => {
-            return "isDriverApproved value must be true or false.";
+            return "isOnline value must be true or false.";
         },
     })
         .optional(),
 });
 exports.UpdateUserZodSchemaValidation = UpdateUserZodSchemaValidation;
+const BecomeDriverZodSchemaValidation = zod_1.default.object({
+    vehicleInfo: exports.vehicleInfoSchemaValidation.optional(),
+});
+exports.BecomeDriverZodSchemaValidation = BecomeDriverZodSchemaValidation;
 const UpdateLocationZodSchemaValidation = zod_1.default.object({
     address: zod_1.default
         .string({

@@ -29,7 +29,8 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
     catch (error) {
-        console.error("Failed to run server. Error:", error);
+        console.error("Failed to start server:", error);
+        (0, shutDown_1.shutDown)("Startup Error", server, 1);
     }
 });
 (() => __awaiter(void 0, void 0, void 0, function* () {
@@ -37,8 +38,15 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     yield startServer();
     yield (0, seedSuperAdmin_1.seedSuperAdmin)();
 }))();
-// Termination Signals
-process.on("SIGTERM", () => (0, shutDown_1.gracefullShutDown)("SIGTERM", server));
-process.on("SIGINT", () => (0, shutDown_1.gracefullShutDown)("SIGTERM", server));
-process.on("unhandledRejection", () => (0, shutDown_1.errorShutDown)("Unhandled Rejection", server));
-process.on("uncaughtException", () => (0, shutDown_1.errorShutDown)("Uncaught Exception", server));
+//  Termination signals 
+process.on("SIGTERM", () => (0, shutDown_1.shutDown)("SIGTERM", server));
+process.on("SIGINT", () => (0, shutDown_1.shutDown)("SIGINT", server));
+//  Fatal errors 
+process.on("unhandledRejection", (reason) => {
+    console.error("Unhandled Rejection:", reason);
+    (0, shutDown_1.shutDown)("Unhandled Rejection", server, 1);
+});
+process.on("uncaughtException", (error) => {
+    console.error("Uncaught Exception:", error);
+    (0, shutDown_1.shutDown)("Uncaught Exception", server, 1);
+});

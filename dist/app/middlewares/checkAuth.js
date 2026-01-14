@@ -20,28 +20,33 @@ const jwt_1 = require("../utils/jwt");
 const env_1 = require("../config/env");
 const user_model_1 = require("../modules/user/user.model");
 const checkUserStatus_1 = require("../utils/checkUserStatus");
-const user_interface_1 = require("../modules/user/user.interface");
 const checkAuth = (...authRoles) => (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const accessToken = req.cookies.accessToken;
     if (!accessToken) {
-        throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.UNAUTHORIZED, "No access token received.Please login get new access token...");
+        throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.UNAUTHORIZED, "No access token received.Please login to get new access token...");
     }
     const verifiedAccessToken = (0, jwt_1.verifyToken)(accessToken, env_1.envVars.JWT_ACCESS_SECRET);
     const userRole = verifiedAccessToken.role;
-    const userId = verifiedAccessToken.userId;
+    // const userId = verifiedAccessToken.userId;
     if (!authRoles.includes(userRole)) {
         throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.UNAUTHORIZED, "You are not permitted to view this route!!!");
     }
-    if (userRole === user_interface_1.Role.DRIVER) {
-        const driverId = userId;
-        const driver = (yield user_model_1.User.findById(driverId));
-        if (!driver.vehicleInfo) {
-            throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.BAD_REQUEST, "You aren't authorized since you haven't submitted your vehicle information!");
-        }
-        if (driver.vehicleInfo && !driver.isDriverApproved) {
-            throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.BAD_REQUEST, "Your vehicle details are pending approval. You'll be able to perform this action once approved. Please review and update if needed.");
-        }
-    }
+    // if (userRole === Role.DRIVER) {
+    //   const driverId = userId;
+    //   const driver = (await User.findById(driverId)) as HydratedDocument<IUser>;
+    //   if (!driver.vehicleInfo) {
+    //     throw new AppError(
+    //       HttpStatusCodes.BAD_REQUEST,
+    //       "You aren't authorized since you haven't submitted your vehicle information!"
+    //     );
+    //   }
+    //   if (driver.vehicleInfo && !driver.isDriverApproved) {
+    //     throw new AppError(
+    //       HttpStatusCodes.BAD_REQUEST,
+    //       "Your vehicle details are pending approval. You'll be able to perform this action once approved. Please review and update if needed."
+    //     );
+    //   }
+    // }
     const email = verifiedAccessToken.email;
     const user = (yield user_model_1.User.findOne({ email }));
     (0, checkUserStatus_1.checkUserStatus)(req, user, email);

@@ -46,8 +46,9 @@ const vehicleInfoSchema = new mongoose_1.Schema({
             return this.role === user_interface_1.Role.DRIVER;
         },
     },
-    vehicleModel: {
+    brand: {
         type: String,
+        enum: Object.values(user_interface_1.VehicleBrands),
         default: null,
         required: function () {
             return this.role === user_interface_1.Role.DRIVER;
@@ -118,7 +119,7 @@ const userSchema = new mongoose_1.Schema({
     isVerified: { type: Boolean, default: false },
     isOnline: { type: Boolean, default: false },
     vehicleInfo: { type: vehicleInfoSchema, default: null },
-    isDriverApproved: { type: Boolean, default: false },
+    isDriverApproved: { type: Boolean, default: null },
     auths: [authProviderSchema],
     bookings: {
         type: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "Ride" }],

@@ -28,7 +28,21 @@ passport_1.default.use(new passport_local_1.Strategy({
 }, (req, email, password, done) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = (yield user_model_1.User.findOne({ email }).select("+password"));
-        (0, checkUserStatus_1.checkUserStatus)(req, user, email);
+        if (!user) {
+            return done(null, false, {
+                message: "No account found with this email",
+            });
+        }
+        if (user.isDeleted) {
+            return done(null, false, {
+                message: "User is deleted!",
+            });
+        }
+        if (!user.isVerified) {
+            return done(null, false, {
+                message: "User is not verified!",
+            });
+        }
         const isGoogleAuthenticated = user.auths.some((providerObject) => providerObject.provider === "google");
         if (isGoogleAuthenticated && !user.password) {
             return done(null, false, {
@@ -42,7 +56,7 @@ passport_1.default.use(new passport_local_1.Strategy({
         return done(null, user);
     }
     catch (error) {
-        done(error);
+        console.error(error);
     }
 })));
 passport_1.default.use(new passport_google_oauth20_1.Strategy({

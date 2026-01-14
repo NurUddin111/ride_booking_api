@@ -12,9 +12,11 @@ router.post("/ride-request", (0, validateRequest_1.validateRequest)(ride_validat
 router.get("/pending-ride-requests", (0, checkAuth_1.checkAuth)(user_interface_1.Role.DRIVER, user_interface_1.Role.ADMIN), ride_conroller_1.RideControllers.getPendingRideRequests);
 router.get("/all-rides", (0, checkAuth_1.checkAuth)(user_interface_1.Role.ADMIN), ride_conroller_1.RideControllers.getAllRidesData);
 router.get("/my-rides", (0, checkAuth_1.checkAuth)(...Object.values(user_interface_1.Role)), ride_conroller_1.RideControllers.getMyRidesData);
+router.get("/driver-status", (0, checkAuth_1.checkAuth)(user_interface_1.Role.DRIVER), ride_conroller_1.RideControllers.getDriverStatus);
+router.get("/active", (0, checkAuth_1.checkAuth)(...Object.values(user_interface_1.Role)), ride_conroller_1.RideControllers.getActiveRide);
 router.get("/:id", (0, checkAuth_1.checkAuth)(user_interface_1.Role.ADMIN), ride_conroller_1.RideControllers.getSingleRideData);
 router.post("/accept-ride/:id", (0, checkAuth_1.checkAuth)(user_interface_1.Role.DRIVER), ride_conroller_1.RideControllers.acceptRideRequest);
 router.post("/cancel-ride/:id", (0, checkAuth_1.checkAuth)(...Object.values(user_interface_1.Role)), ride_conroller_1.RideControllers.cancleRideRequest);
-router.post("/update-ride/:id", (0, validateRequest_1.validateRequest)(ride_validation_1.updateRideZodSchema), (0, checkAuth_1.checkAuth)(user_interface_1.Role.DRIVER), ride_conroller_1.RideControllers.updateRideRequest);
+router.put("/update-ride/:id", (0, validateRequest_1.validateRequest)(ride_validation_1.updateRideZodSchema), (0, checkAuth_1.checkAuth)(user_interface_1.Role.DRIVER), ride_conroller_1.RideControllers.updateRideRequest);
 router.get("/view-earnings/:id", (0, checkAuth_1.checkAuth)(user_interface_1.Role.DRIVER), ride_conroller_1.RideControllers.viewEarnings);
 exports.RideRoutes = router;

@@ -29,18 +29,18 @@ const otp_service_1 = require("../otp/otp.service");
 const moment_1 = __importDefault(require("moment"));
 const queryBuilder_1 = require("../../utils/queryBuilder");
 const createRideRequest = (decodedToken, totalPassengers, vehicleType, pickUpAddress, destinationAddress) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _a, _b, _c;
     const riderId = decodedToken.userId;
     const rider = (yield user_model_1.User.findById(riderId));
+    if (rider.penalties) {
+        throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.BAD_REQUEST, "To book another ride,please pay the pending fee on your account.We apoligize for any inconvenience.");
+    }
     const activeRide = yield ride_model_1.Ride.findOne({
         riderId,
         status: { $in: ["PENDING", "ACCEPTED", "ONGOING"] },
     });
     if (activeRide) {
         throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.BAD_REQUEST, "You already have an active ride. Please finish or cancel it before booking another.");
-    }
-    if (rider.penalties) {
-        throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.BAD_REQUEST, "To book another ride,please pay the pending fee on your account.We apoligize for any inconvenience.");
     }
     if (!vehicleType ||
         !Object.values(user_interface_1.VehicleType).includes(vehicleType)) {
@@ -50,8 +50,16 @@ const createRideRequest = (decodedToken, totalPassengers, vehicleType, pickUpAdd
     if (!pickUpAddress) {
         throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.NOT_FOUND, "Please select pickup location!");
     }
+    const countryP = (_a = pickUpAddress.split(",").pop()) === null || _a === void 0 ? void 0 : _a.trim();
+    if (countryP !== "Bangladesh") {
+        throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.NOT_FOUND, "Please select a location inside Bangladesh");
+    }
     if (!destinationAddress) {
         throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.NOT_FOUND, "Please select destination location!");
+    }
+    const countryD = (_b = destinationAddress.split(",").pop()) === null || _b === void 0 ? void 0 : _b.trim();
+    if (countryD !== "Bangladesh") {
+        throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.NOT_FOUND, "Please select a location inside Bangladesh");
     }
     const pickUpCo = yield (0, geoApiFy_1.geocodeAddress)(pickUpAddress);
     if (!pickUpCo) {
@@ -62,7 +70,7 @@ const createRideRequest = (decodedToken, totalPassengers, vehicleType, pickUpAdd
         throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.NOT_FOUND, "Sorry! Couldn't find your destination location!Please check if location actually exists!");
     }
     const totalDistance = (0, fareCalculationFormula_1.calculateDistance)(pickUpCo.latitude, pickUpCo.longitude, destinationCo.latitude, destinationCo.longitude);
-    const estimatedTime = (totalDistance / 20) * 60;
+    const estimatedTime = parseFloat(((totalDistance / 20) * 60).toFixed(2));
     const minEstFare = yield (0, fareCalculationFormula_1.calculateFare)(totalDistance, vehicleType, estimatedTime);
     const maxEstFare = minEstFare + 100;
     const ride = yield ride_model_1.Ride.create({
@@ -80,19 +88,17 @@ const createRideRequest = (decodedToken, totalPassengers, vehicleType, pickUpAdd
             },
             address: destinationCo.address,
         },
-        distanceInKm: totalDistance,
+        destinationDistanceInKm: totalDistance,
+        destinationEta: estimatedTime,
         fareEstimate: { min: minEstFare, max: maxEstFare },
     });
     const rideId = ride._id;
-    (_a = rider.bookings) === null || _a === void 0 ? void 0 : _a.push(rideId);
+    (_c = rider.bookings) === null || _c === void 0 ? void 0 : _c.push(rideId);
     yield rider.save();
     return ride;
 });
 const getPendingRideRequests = () => __awaiter(void 0, void 0, void 0, function* () {
     const rideRequests = yield ride_model_1.Ride.find({ status: ride_interface_1.RIDE_STATUS.PENDING });
-    if (rideRequests.length === 0) {
-        throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.NOT_FOUND, "No pending rides available");
-    }
     return { rideRequests };
 });
 const getAllRidesData = (query) => __awaiter(void 0, void 0, void 0, function* () {
@@ -128,8 +134,49 @@ const getMyRidesData = (userId) => __awaiter(void 0, void 0, void 0, function* (
     }
     return { allRides };
 });
+const getDriverStatus = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const isDriverBusy = yield ride_model_1.Ride.findOne({
+        $or: [{ riderId: userId }, { driverId: userId }],
+        status: {
+            $in: [
+                ride_interface_1.RIDE_STATUS.PENDING,
+                ride_interface_1.RIDE_STATUS.ACCEPTED,
+                ride_interface_1.RIDE_STATUS.VEHICLE_ARRIVED,
+                ride_interface_1.RIDE_STATUS.ONGOING,
+            ],
+        },
+    });
+    if (!isDriverBusy) {
+        return {};
+    }
+    const riderId = isDriverBusy.riderId;
+    const rider = (yield user_model_1.User.findById(riderId));
+    return { isDriverBusy, rider };
+});
+const getActiveRide = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const activeRide = yield ride_model_1.Ride.findOne({
+        $or: [{ riderId: userId }, { driverId: userId }],
+        status: {
+            $nin: [
+                "COMPLETED",
+                "CANCELLED_BY_RIDER",
+                "CANCELLED_BY_DRIVER",
+                "EXPIRED",
+            ],
+        },
+    });
+    if (!activeRide) {
+        return {};
+    }
+    const driverId = activeRide === null || activeRide === void 0 ? void 0 : activeRide.driverId;
+    let driver = {};
+    if (driverId) {
+        driver = (yield user_model_1.User.findById(driverId));
+    }
+    return { activeRide, driver };
+});
 const acceptRideRequest = (rideId, decodedToken) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+    var _a, _b, _c;
     const ride = (yield ride_model_1.Ride.findById(rideId));
     if (!ride) {
         throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.NOT_FOUND, "No ride request found!");
@@ -147,14 +194,8 @@ const acceptRideRequest = (rideId, decodedToken) => __awaiter(void 0, void 0, vo
     if (!driver.isOnline) {
         throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.BAD_REQUEST, "To accept a ride please set your isOnline status to true!");
     }
-    const isDriverBusy = yield ride_model_1.Ride.find({
-        driverId,
-        status: ride_interface_1.RIDE_STATUS.PENDING ||
-            ride_interface_1.RIDE_STATUS.ACCEPTED ||
-            ride_interface_1.RIDE_STATUS.VEHICLE_ARRIVED ||
-            ride_interface_1.RIDE_STATUS.ONGOING,
-    }).countDocuments();
-    if (isDriverBusy) {
+    const driverStatus = yield getDriverStatus(driverId);
+    if (driverStatus.isDriverBusy) {
         throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.BAD_REQUEST, "You can't accept another ride  untill you have completed your current ride!");
     }
     const driverLocation = (_a = driver.vehicleInfo) === null || _a === void 0 ? void 0 : _a.vehicleLocation;
@@ -162,9 +203,12 @@ const acceptRideRequest = (rideId, decodedToken) => __awaiter(void 0, void 0, vo
         throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.BAD_REQUEST, "Please set your location!");
     }
     const pickUpLocationDistance = (0, fareCalculationFormula_1.calculateDistance)(ride.pickupLocation.coordinates.lat, ride.pickupLocation.coordinates.lng, driverLocation.coordinates.lat, driverLocation.coordinates.lng);
-    if (pickUpLocationDistance >= 5) {
-        throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.BAD_REQUEST, "A driver within 5km distance can accept a ride only");
-    }
+    // if (pickUpLocationDistance >= 5) {
+    //   throw new AppError(
+    //     HttpStatusCodes.BAD_REQUEST,
+    //     "A driver within 5km distance can accept a ride only"
+    //   );
+    // }
     const rider = (yield user_model_1.User.findById(riderId));
     const email = rider.email;
     const sub = "Ride Request Verification Code";
@@ -172,10 +216,11 @@ const acceptRideRequest = (rideId, decodedToken) => __awaiter(void 0, void 0, vo
     const riderName = rider.name;
     const driverName = driver.name;
     const vehicleModel = user_interface_1.VehicleType.CAR;
-    const vehicleNumber = "RX-5643";
+    const vehicleNumber = (_b = driver.vehicleInfo) === null || _b === void 0 ? void 0 : _b.vehicleNumberPlate;
     const pickUpAddress = ride.pickupLocation.address;
     const destinationAddress = ride.destinationLocation.address;
-    const eta = (pickUpLocationDistance / 20) * 60;
+    const driverEta = (pickUpLocationDistance / 20) * 60;
+    const destinationEta = ride.destinationEta;
     const fareEstimateMin = ride.fareEstimate.min;
     const fareEstimateMax = ride.fareEstimate.max;
     const tempData = {
@@ -185,7 +230,8 @@ const acceptRideRequest = (rideId, decodedToken) => __awaiter(void 0, void 0, vo
         vehicleNumber,
         pickUpAddress,
         destinationAddress,
-        eta,
+        driverEta,
+        destinationEta,
         fareEstimateMin,
         fareEstimateMax,
         rideId,
@@ -195,11 +241,13 @@ const acceptRideRequest = (rideId, decodedToken) => __awaiter(void 0, void 0, vo
     if (rideStatus === ride_interface_1.RIDE_STATUS.PENDING) {
         ride.driverId = driverId;
         ride.status = ride_interface_1.RIDE_STATUS.ACCEPTED;
+        ride.driverEta = driverEta;
+        ride.pickUpDistanceInKm = pickUpLocationDistance;
         ride.rideHistory.acceptedAt = new Date();
         yield ride.save();
         yield otp_service_1.OTPServices.sendOTP(email, sub, temp, tempData, OTP_EXPIRATION);
         const rideId = ride._id;
-        (_b = driver.bookings) === null || _b === void 0 ? void 0 : _b.push(rideId);
+        (_c = driver.bookings) === null || _c === void 0 ? void 0 : _c.push(rideId);
         yield driver.save();
         return {
             message: `You've accepted the ride. Navigate to the pickup point: ${pickUpAddress}.`,
@@ -376,7 +424,7 @@ const updateRideRequest = (rideId, decodedToken, rideStatus, otp) => __awaiter(v
         rideHistory.completedAt = new Date();
         const diffMins = (0, moment_1.default)(rideHistory.completedAt).diff((0, moment_1.default)(rideHistory.startedAt), "minutes");
         rideHistory.travellingTimeInMins = diffMins;
-        const totalFare = yield (0, fareCalculationFormula_1.calculateFare)(ride.distanceInKm, ride.vehicleType, rideHistory.travellingTimeInMins);
+        const totalFare = yield (0, fareCalculationFormula_1.calculateFare)(ride.destinationDistanceInKm, ride.vehicleType, rideHistory.travellingTimeInMins);
         rideHistory.totalFare = totalFare;
         yield ride.save();
         return {
@@ -424,8 +472,10 @@ exports.RideServices = {
     createRideRequest,
     getPendingRideRequests,
     getAllRidesData,
+    getDriverStatus,
     getSingleRideData,
     getMyRidesData,
+    getActiveRide,
     cancelRideRequest,
     acceptRideRequest,
     updateRideRequest,

@@ -143,6 +143,7 @@ const getMe = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     };
 });
 const updateUser = (userId, payload, decodedToken) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
     const user = yield user_model_1.User.findById(userId);
     if (!user) {
         throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.NOT_FOUND, "User Not Found");
@@ -158,11 +159,12 @@ const updateUser = (userId, payload, decodedToken) => __awaiter(void 0, void 0, 
         }
     }
     if (payload.role && payload.role === user_interface_1.Role.DRIVER) {
-        if (!payload.vehicleInfo) {
+        if (((_a = payload.vehicleInfo) === null || _a === void 0 ? void 0 : _a.vehicleInfo) === undefined) {
             throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.BAD_REQUEST, "If you want to update your role to DRIVER,you must have to give your vehicle information");
         }
     }
-    if (payload.vehicleInfo && payload.role !== user_interface_1.Role.DRIVER) {
+    if (((_b = payload.vehicleInfo) === null || _b === void 0 ? void 0 : _b.vehicleInfo) !== undefined &&
+        payload.role !== user_interface_1.Role.DRIVER) {
         throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.BAD_REQUEST, "If you want to submit your vehicle information,please select your role as driver");
     }
     if (payload.isDriverApproved && decodedToken.role !== user_interface_1.Role.ADMIN) {
@@ -182,13 +184,84 @@ const updateUser = (userId, payload, decodedToken) => __awaiter(void 0, void 0, 
     });
     return updatedUser;
 });
-const deleteUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+const becomeDriver = (userId, payload, decodedToken) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_model_1.User.findById(userId);
+    if (!user) {
+        throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.NOT_FOUND, "User Not Found");
+    }
+    if (userId !== decodedToken.userId) {
+        throw new AppError_1.default(401, "You can only send become a driver request for yourself!");
+    }
+    if (payload.vehicleInfo === undefined) {
+        throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.BAD_REQUEST, "Please submit your vehicle information!");
+    }
+    payload = Object.assign({ isDriverApproved: false }, payload);
+    const updatedUser = yield user_model_1.User.findByIdAndUpdate(userId, payload, {
+        new: true,
+        runValidators: true,
+    });
+    return updatedUser;
+});
+const becomeDriverRequests = (decodedToken) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = decodedToken;
+    const user = yield user_model_1.User.findById(userId);
+    if (!user) {
+        throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.NOT_FOUND, "User Not Found");
+    }
+    const pendingDriverRequests = yield user_model_1.User.find({
+        isDriverApproved: false,
+    });
+    return pendingDriverRequests;
+});
+const approveDriver = (id, decodedToken) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = decodedToken;
+    const admin = yield user_model_1.User.findById(userId);
+    if (!admin) {
+        throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.NOT_FOUND, "Admin Not Found");
+    }
+    const user = yield user_model_1.User.findById(id);
+    if (!user) {
+        throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.NOT_FOUND, "User Not Found");
+    }
+    const payload = {
+        role: user_interface_1.Role.DRIVER,
+        isDriverApproved: true,
+    };
+    const approvedDriver = yield user_model_1.User.findByIdAndUpdate(id, payload, {
+        new: true,
+        runValidators: true,
+    });
+    return approvedDriver;
+});
+const getAllDrivers = (decodedToken) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = decodedToken;
+    const admin = yield user_model_1.User.findById(userId);
+    if (!admin) {
+        throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.NOT_FOUND, "Admin Not Found");
+    }
+    const drivers = yield user_model_1.User.find({
+        role: user_interface_1.Role.DRIVER,
+        isDriverApproved: true,
+    });
+    return drivers;
+});
+const deleteUser = (userId, res) => __awaiter(void 0, void 0, void 0, function* () {
     const isUserExist = yield user_model_1.User.findById(userId);
     if (!isUserExist || isUserExist.isDeleted) {
         throw new AppError_1.default(httpStatusCodes_1.HttpStatusCodes.NOT_FOUND, "User Not Found");
     }
     const user = yield user_model_1.User.findByIdAndUpdate(userId, { isDeleted: true }, {
         new: true,
+    });
+    res.clearCookie("accessToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+    });
+    res.clearCookie("refreshToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
     });
     return user;
 });
@@ -224,6 +297,10 @@ exports.UserServices = {
     getSingleUser,
     getMe,
     updateUser,
+    becomeDriver,
+    becomeDriverRequests,
+    approveDriver,
+    getAllDrivers,
     deleteUser,
     setVehicleLocation,
 };

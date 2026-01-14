@@ -21,7 +21,7 @@ const createUserRequest = (0, catchAsync_1.catchAsync)((req, res, next) => __awa
         statusCode: 200,
         success: true,
         message: "OTP sent successfully",
-        data: null,
+        data: { email },
     });
 }));
 const createUserVerification = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -71,12 +71,13 @@ const getSingleUser = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter
 }));
 const getMe = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const decodedToken = req.user;
-    const result = yield user_service_1.UserServices.getMe(decodedToken.userId);
+    const userId = decodedToken.userId;
+    const result = yield user_service_1.UserServices.getMe(userId);
     (0, sendResponse_1.sendResponse)(res, {
         success: true,
         statusCode: httpStatusCodes_1.HttpStatusCodes.CREATED,
         message: "Your profile Retrieved Successfully",
-        data: result.data,
+        data: result,
     });
 }));
 const updateUser = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -91,9 +92,52 @@ const updateUser = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(vo
         data: user,
     });
 }));
+const becomeDriver = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    const payload = req.body;
+    const verifiedToken = req.user;
+    const user = yield user_service_1.UserServices.becomeDriver(id, payload, verifiedToken);
+    (0, sendResponse_1.sendResponse)(res, {
+        success: true,
+        statusCode: httpStatusCodes_1.HttpStatusCodes.OK,
+        message: "Your request to be a driver is sent successfully!",
+        data: user,
+    });
+}));
+const becomeDriverRequests = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const verifiedToken = req.user;
+    const result = yield user_service_1.UserServices.becomeDriverRequests(verifiedToken);
+    (0, sendResponse_1.sendResponse)(res, {
+        success: true,
+        statusCode: httpStatusCodes_1.HttpStatusCodes.OK,
+        message: "Driver approval requests retrieved successfully!",
+        data: result,
+    });
+}));
+const approveDriver = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    const verifiedToken = req.user;
+    const result = yield user_service_1.UserServices.approveDriver(id, verifiedToken);
+    (0, sendResponse_1.sendResponse)(res, {
+        success: true,
+        statusCode: httpStatusCodes_1.HttpStatusCodes.OK,
+        message: "Driver Approved!",
+        data: result,
+    });
+}));
+const getAllDrivers = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const verifiedToken = req.user;
+    const drivers = yield user_service_1.UserServices.getAllDrivers(verifiedToken);
+    (0, sendResponse_1.sendResponse)(res, {
+        success: true,
+        statusCode: httpStatusCodes_1.HttpStatusCodes.OK,
+        message: "All drivers details retrieved successfully!",
+        data: drivers,
+    });
+}));
 const deleteUser = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
-    const user = yield user_service_1.UserServices.deleteUser(id);
+    const user = yield user_service_1.UserServices.deleteUser(id, res);
     (0, sendResponse_1.sendResponse)(res, {
         success: true,
         statusCode: httpStatusCodes_1.HttpStatusCodes.OK,
@@ -120,6 +164,10 @@ exports.UserControllers = {
     getSingleUser,
     getMe,
     updateUser,
+    becomeDriver,
+    becomeDriverRequests,
+    approveDriver,
+    getAllDrivers,
     deleteUser,
     updateVehicleLocation,
 };
