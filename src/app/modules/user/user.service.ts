@@ -242,7 +242,7 @@ const updateUser = async (
   }
 
   if (payload.role && payload.role === Role.DRIVER) {
-    if (!payload.vehicleInfo) {
+    if (payload.vehicleInfo?.vehicleInfo === undefined) {
       throw new AppError(
         HttpStatusCodes.BAD_REQUEST,
         "If you want to update your role to DRIVER,you must have to give your vehicle information"
@@ -250,7 +250,10 @@ const updateUser = async (
     }
   }
 
-  if (payload.vehicleInfo && payload.role !== Role.DRIVER) {
+  if (
+    payload.vehicleInfo?.vehicleInfo !== undefined &&
+    payload.role !== Role.DRIVER
+  ) {
     throw new AppError(
       HttpStatusCodes.BAD_REQUEST,
       "If you want to submit your vehicle information,please select your role as driver"
@@ -288,7 +291,103 @@ const updateUser = async (
   return updatedUser;
 };
 
-const deleteUser = async (userId: string) => {
+const becomeDriver = async (
+  userId: string,
+  payload: Partial<IUser>,
+  decodedToken: JwtPayload
+) => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new AppError(HttpStatusCodes.NOT_FOUND, "User Not Found");
+  }
+
+  if (userId !== decodedToken.userId) {
+    throw new AppError(
+      401,
+      "You can only send become a driver request for yourself!"
+    );
+  }
+
+  if (payload.vehicleInfo === undefined) {
+    throw new AppError(
+      HttpStatusCodes.BAD_REQUEST,
+      "Please submit your vehicle information!"
+    );
+  }
+
+  payload = {
+    isDriverApproved: false,
+    ...payload,
+  };
+
+  const updatedUser = await User.findByIdAndUpdate(userId, payload, {
+    new: true,
+    runValidators: true,
+  });
+
+  return updatedUser;
+};
+
+const becomeDriverRequests = async (decodedToken: JwtPayload) => {
+  const { userId } = decodedToken;
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new AppError(HttpStatusCodes.NOT_FOUND, "User Not Found");
+  }
+
+  const pendingDriverRequests = await User.find({
+    isDriverApproved: false,
+  });
+
+  return pendingDriverRequests;
+};
+
+const approveDriver = async (id: string, decodedToken: JwtPayload) => {
+  const { userId } = decodedToken;
+  const admin = await User.findById(userId);
+
+  if (!admin) {
+    throw new AppError(HttpStatusCodes.NOT_FOUND, "Admin Not Found");
+  }
+
+  const user = await User.findById(id);
+
+  if (!user) {
+    throw new AppError(HttpStatusCodes.NOT_FOUND, "User Not Found");
+  }
+
+  const payload = {
+    role: Role.DRIVER,
+    isDriverApproved: true,
+  };
+
+  const approvedDriver = await User.findByIdAndUpdate(id, payload, {
+    new: true,
+    runValidators: true,
+  });
+
+  return approvedDriver;
+};
+
+const getAllDrivers = async (decodedToken: JwtPayload) => {
+  const { userId } = decodedToken;
+  const admin = await User.findById(userId);
+
+  if (!admin) {
+    throw new AppError(HttpStatusCodes.NOT_FOUND, "Admin Not Found");
+  }
+
+  const drivers = await User.find({
+    role: Role.DRIVER,
+    isDriverApproved: true,
+  });
+
+  return drivers;
+};
+
+const deleteUser = async (userId: string, res: Response) => {
   const isUserExist = await User.findById(userId);
 
   if (!isUserExist || isUserExist.isDeleted) {
@@ -303,6 +402,18 @@ const deleteUser = async (userId: string) => {
     }
   );
 
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  });
+
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  });
+
   return user;
 };
 
@@ -313,10 +424,10 @@ const setVehicleLocation = async (
   const driverId = decodedToken.userId;
   const driver = (await User.findById(driverId)) as HydratedDocument<IUser>;
   const vehicleInfo = driver.vehicleInfo;
-  if(!vehicleInfo){
-    throw new AppError(HttpStatusCodes.NOT_FOUND,"No Vehicle Info found")
+  if (!vehicleInfo) {
+    throw new AppError(HttpStatusCodes.NOT_FOUND, "No Vehicle Info found");
   }
-  
+
   const addressCo = await geocodeAddress(address);
 
   if (!addressCo) {
@@ -328,7 +439,6 @@ const setVehicleLocation = async (
 
   const lng = Number(addressCo.longitude);
   const lat = Number(addressCo.latitude);
-
 
   await RedisServices.setVehicleLocation(driverId, lng, lat);
 
@@ -353,6 +463,10 @@ export const UserServices = {
   getSingleUser,
   getMe,
   updateUser,
+  becomeDriver,
+  becomeDriverRequests,
+  approveDriver,
+  getAllDrivers,
   deleteUser,
   setVehicleLocation,
 };

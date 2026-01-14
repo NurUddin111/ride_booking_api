@@ -63,17 +63,17 @@ This project focuses on **scalability**, **security**, and **clean API design**,
     ---------------------------------------------------------------------------------------------------
     | METHOD |            ENDPOINT           |           BODY             |      DESCRIPTION          |
     ---------------------------------------------------------------------------------------------------
-    | POST   | /api/v1/user/register-request | {                          | Create a new user         |
+    | POST   | /api/v1/user/signup           | {                          | Create a new user         |
     |        |                               |  "name": "John Doe",       | registration request.     |
     |        |                               |  "email":"john@example.com"| Sends a 6 digit OTP to    |
     |        |                               | }                          | verify email.             |
     ---------------------------------------------------------------------------------------------------
-    | POST   | /api/v1/user/register-verifi  | {                          | Verify user registration  |
-    |        | cation                        |  "otp": "123456"           | using OTP.                |
+    | POST   | /api/v1/user/signup/verify    | {                          | Verify user registration  |
+    |        |                               |  "otp": "123456"           | using OTP.                |
     |        |                               | }                          |                           |
     |        |                               |                            |                           |
     ---------------------------------------------------------------------------------------------------
-    | POST   | /api/v1/user/register-success | {                          | Complete user registration|
+    | POST   | /api/v1/user/signup/password  | {                          | Complete user registration|
     |        |                               |  "password": "Abc123@&$",  |                           |
     |        |                               | }                          |                           |
     ---------------------------------------------------------------------------------------------------
@@ -175,7 +175,6 @@ This project focuses on **scalability**, **security**, and **clean API design**,
     | GET    | /api/v1/ride/view-earnings/:id|                            | View driver’s earnings    |
     ---------------------------------------------------------------------------------------------------
 
-
 ## ⚙️ Installation & Setup
 
     ```bash
@@ -195,7 +194,9 @@ This project focuses on **scalability**, **security**, and **clean API design**,
     # Run the development server
     npm run dev
 
-    🧪 Testing the API
+## 🧪 Testing the API
+
+---
 
 ## 📮 Postman Collection
 
@@ -208,22 +209,23 @@ This project focuses on **scalability**, **security**, and **clean API design**,
 📁 Folder Structure
 
     src/
-    │               
-    ├── app/              
-    │   ├── config/          
-    │   ├── errorHelpers/         
-    │   ├── helpers/        
-    │   ├── interfaces/         
-    │   ├── middlewares/         
-    │   ├── modules/        
-    │   ├── routes/         
-    │   ├── utils/        
-    │   └── constants.ts         
     │
-    ├── app.ts        
+    ├── app/
+    │   ├── config/
+    │   ├── errorHelpers/
+    │   ├── helpers/
+    │   ├── interfaces/
+    │   ├── middlewares/
+    │   ├── modules/
+    │   ├── routes/
+    │   ├── utils/
+    │   └── constants.ts
+    │
+    ├── app.ts
     └── server.ts
 
-🧠 Future Improvements
+## 🧠 Future Improvements
+
     Add real-time location tracking with Socket.io
 
     Implement payment gateway integration
@@ -236,7 +238,7 @@ This project focuses on **scalability**, **security**, and **clean API design**,
 
     Muhammad Nur Uddin
 
-    “Code. Learn. Repeat.”
+    “Code.Learn.Repeat.”
     📧 nuruddinmuhammad38@gmail.com
     🌐 https://github.com/NurUddin111
     ```

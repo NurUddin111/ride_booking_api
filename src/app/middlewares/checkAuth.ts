@@ -7,7 +7,7 @@ import { envVars } from "../config/env";
 import { JwtPayload } from "jsonwebtoken";
 import { User } from "../modules/user/user.model";
 import { checkUserStatus } from "../utils/checkUserStatus";
-import { IUser, Role } from "../modules/user/user.interface";
+import { IUser } from "../modules/user/user.interface";
 import { HydratedDocument } from "mongoose";
 
 export const checkAuth = (...authRoles: string[]) =>
@@ -15,7 +15,10 @@ export const checkAuth = (...authRoles: string[]) =>
     const accessToken = req.cookies.accessToken;
 
     if (!accessToken) {
-      throw new AppError(HttpStatusCodes.UNAUTHORIZED, "No access token received.Please login get new access token...");
+      throw new AppError(
+        HttpStatusCodes.UNAUTHORIZED,
+        "No access token received.Please login to get new access token..."
+      );
     }
 
     const verifiedAccessToken = verifyToken(
@@ -24,7 +27,7 @@ export const checkAuth = (...authRoles: string[]) =>
     ) as JwtPayload;
 
     const userRole = verifiedAccessToken.role;
-    const userId = verifiedAccessToken.userId;
+    // const userId = verifiedAccessToken.userId;
 
     if (!authRoles.includes(userRole)) {
       throw new AppError(
@@ -33,24 +36,24 @@ export const checkAuth = (...authRoles: string[]) =>
       );
     }
 
-    if (userRole === Role.DRIVER) {
-      const driverId = userId;
-      const driver = (await User.findById(driverId)) as HydratedDocument<IUser>;
+    // if (userRole === Role.DRIVER) {
+    //   const driverId = userId;
+    //   const driver = (await User.findById(driverId)) as HydratedDocument<IUser>;
 
-      if (!driver.vehicleInfo) {
-        throw new AppError(
-          HttpStatusCodes.BAD_REQUEST,
-          "You aren't authorized since you haven't submitted your vehicle information!"
-        );
-      }
+    //   if (!driver.vehicleInfo) {
+    //     throw new AppError(
+    //       HttpStatusCodes.BAD_REQUEST,
+    //       "You aren't authorized since you haven't submitted your vehicle information!"
+    //     );
+    //   }
 
-      if (driver.vehicleInfo && !driver.isDriverApproved) {
-        throw new AppError(
-          HttpStatusCodes.BAD_REQUEST,
-          "Your vehicle details are pending approval. You'll be able to perform this action once approved. Please review and update if needed."
-        );
-      }
-    }
+    //   if (driver.vehicleInfo && !driver.isDriverApproved) {
+    //     throw new AppError(
+    //       HttpStatusCodes.BAD_REQUEST,
+    //       "Your vehicle details are pending approval. You'll be able to perform this action once approved. Please review and update if needed."
+    //     );
+    //   }
+    // }
 
     const email = verifiedAccessToken.email;
     const user = (await User.findOne({ email })) as HydratedDocument<IUser>;

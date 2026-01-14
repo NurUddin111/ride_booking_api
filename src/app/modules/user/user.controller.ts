@@ -7,6 +7,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import { HttpStatusCodes } from "../../utils/httpStatusCodes";
 import { JwtPayload } from "jsonwebtoken";
 import { RedisServices } from "../redis/redis.service";
+import AppError from "../../errorHelpers/AppError";
 
 const createUserRequest = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -16,7 +17,7 @@ const createUserRequest = catchAsync(
       statusCode: 200,
       success: true,
       message: "OTP sent successfully",
-      data: null,
+      data: { email },
     });
   }
 );
@@ -87,13 +88,16 @@ const getSingleUser = catchAsync(
 const getMe = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const decodedToken = req.user as JwtPayload;
-    const result = await UserServices.getMe(decodedToken.userId);
+
+    const userId = decodedToken.userId;
+
+    const result = await UserServices.getMe(userId);
 
     sendResponse(res, {
       success: true,
       statusCode: HttpStatusCodes.CREATED,
       message: "Your profile Retrieved Successfully",
-      data: result.data,
+      data: result,
     });
   }
 );
@@ -113,10 +117,69 @@ const updateUser = catchAsync(
   }
 );
 
+const becomeDriver = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    const payload: Partial<IUser> = req.body;
+    const verifiedToken = req.user as JwtPayload;
+
+    const user = await UserServices.becomeDriver(id, payload, verifiedToken);
+    sendResponse(res, {
+      success: true,
+      statusCode: HttpStatusCodes.OK,
+      message: "Your request to be a driver is sent successfully!",
+      data: user,
+    });
+  }
+);
+
+const becomeDriverRequests = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const verifiedToken = req.user as JwtPayload;
+
+    const result = await UserServices.becomeDriverRequests(verifiedToken);
+    sendResponse(res, {
+      success: true,
+      statusCode: HttpStatusCodes.OK,
+      message: "Driver approval requests retrieved successfully!",
+      data: result,
+    });
+  }
+);
+
+const approveDriver = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    const verifiedToken = req.user as JwtPayload;
+
+    const result = await UserServices.approveDriver(id, verifiedToken);
+    sendResponse(res, {
+      success: true,
+      statusCode: HttpStatusCodes.OK,
+      message: "Driver Approved!",
+      data: result,
+    });
+  }
+);
+
+const getAllDrivers = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const verifiedToken = req.user as JwtPayload;
+
+    const drivers = await UserServices.getAllDrivers(verifiedToken);
+    sendResponse(res, {
+      success: true,
+      statusCode: HttpStatusCodes.OK,
+      message: "All drivers details retrieved successfully!",
+      data: drivers,
+    });
+  }
+);
+
 const deleteUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
-    const user = await UserServices.deleteUser(id);
+    const user = await UserServices.deleteUser(id, res);
     sendResponse(res, {
       success: true,
       statusCode: HttpStatusCodes.OK,
@@ -151,6 +214,10 @@ export const UserControllers = {
   getSingleUser,
   getMe,
   updateUser,
+  becomeDriver,
+  becomeDriverRequests,
+  approveDriver,
+  getAllDrivers,
   deleteUser,
   updateVehicleLocation,
 };

@@ -10,7 +10,7 @@ import { Request } from "express";
 export const checkUserStatus = async (
   req: Request,
   user: HydratedDocument<IUser>,
-  email: string
+  email: string,
 ) => {
   if (!user) {
     throw new AppError(HttpStatusCodes.NOT_FOUND, "User does not exist");

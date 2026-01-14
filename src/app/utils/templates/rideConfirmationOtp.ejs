@@ -85,7 +85,14 @@
         </p>
         <p><span class="label">Pickup:</span> <%= pickUpAddress %></p>
         <p><span class="label">Destination:</span> <%= destinationAddress %></p>
-        <p><span class="label">Estimated Arrival:</span> <%= eta %> minutes</p>
+        <p>
+          <span class="label">Estimated Driver Arrival:</span> <%= driverEta %>
+          minutes
+        </p>
+        <p>
+          <span class="label">Estimated Destination Arrival:</span> <%=
+          destinationEta %> minutes
+        </p>
         <p>
           <span class="label">Fare Estimate:</span> ৳ <%= fareEstimateMin %> -
           <%= fareEstimateMax %>

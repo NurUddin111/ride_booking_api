@@ -7,15 +7,33 @@ enum Role {
 }
 
 export enum VehicleType {
-  CAR = "CAR",
   BIKE = "BIKE",
   CNG = "CNG",
+  CAR = "CAR",
   MICROBUS = "MICROBUS",
 }
 
-enum VehicleModel {
+export enum VehicleBrands {
   BAJAJ = "BAJAJ",
-  HONDA = "HONDA",
+  HERO = "HERO",
+  TVS = "TVS",
+  SUZUKI = "SUZUKI",
+  YAMAHA = "YAMAHA",
+  PULSAR = "PULSAR",
+  ROYAL_ENFIELD = "ROYAL_ENFIELD",
+  KTM = "KTM",
+  FZ = "FZ",
+  TOYOTA = "TOYOTA",
+  HYUNDAI = "HYUNDAI",
+  BMW = "BMW",
+  OMODA = "OMODA",
+  MERCEDES_BENZ = "MERCEDES_BENZ",
+  PIAGGIO = "PIAGGIO",
+  MAHINDRA = "MAHINDRA",
+  RUNNE = "RUNNE",
+  NISSAN = "NISSAN",
+  MITSUBISHI = "MITSUBISHI",
+  MAZDA = "MAZDA",
 }
 
 enum IsActive {
@@ -36,8 +54,8 @@ interface IDocuments extends IUser {
 }
 
 interface IVehicleInfo extends IUser {
-  vehicleType: string;
-  vehicleModel: VehicleModel;
+  vehicleType: VehicleType;
+  brand: VehicleBrands;
   vehicleNumberPlate: string;
   vehicleLocation: {
     coordinates: {
@@ -60,7 +78,7 @@ interface IUser {
   role?: Role;
   vehicleInfo?: IVehicleInfo;
   isDriverApproved?: boolean;
-  isDeleted?: string;
+  isDeleted?: boolean;
   isActive?: IsActive;
   isVerified?: boolean;
   isOnline?: boolean;

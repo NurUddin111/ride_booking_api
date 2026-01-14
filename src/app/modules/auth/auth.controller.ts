@@ -7,7 +7,7 @@ import { HttpStatusCodes } from "../../utils/httpStatusCodes";
 import passport from "passport";
 import AppError from "../../errorHelpers/AppError";
 import { createUserTokens } from "../../utils/userTokens";
-import { IAuthTokens, setAuthCookie } from "../../utils/setCookie";
+import { setAuthCookie } from "../../utils/setCookie";
 import { envVars } from "../../config/env";
 import { AuthServices } from "./auth.service";
 import { JwtPayload } from "jsonwebtoken";
@@ -113,13 +113,13 @@ const logout = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     res.clearCookie("accessToken", {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
     });
     res.clearCookie("refreshToken", {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
     });
 
     sendResponse(res, {

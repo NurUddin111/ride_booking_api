@@ -5,18 +5,15 @@ const documentSchemaValidation = z.object({
   drivingLicense: z
     .string()
     .trim()
-    .min(1, { message: "Driving license is required." })
-    .optional(),
+    .min(1, { message: "Driving license is required." }),
   nidOrPassport: z
     .string()
     .trim()
-    .min(1, { message: "NID or Passport is required." })
-    .optional(),
+    .min(1, { message: "NID or Passport is required." }),
   vehicleRegistration: z
     .string()
     .trim()
-    .min(1, { message: "Vehicle registration is required." })
-    .optional(),
+    .min(1, { message: "Vehicle registration is required." }),
 });
 
 export const vehicleInfoSchemaValidation = z.object({
@@ -39,19 +36,16 @@ export const vehicleInfoSchemaValidation = z.object({
   vehicleType: z
     .string()
     .trim()
-    .min(1, { message: "Vehicle type is required." })
-    .optional(),
-  vehicleModel: z
+    .min(1, { message: "Vehicle type is required." }),
+
+  brand: z
     .string()
     .trim()
-    .min(1, { message: "Vehicle model is required." })
-    .optional(),
+    .min(1, { message: "Vehicle model is required." }),
   vehicleNumberPlate: z
     .string()
     .trim()
-    .min(1, { message: "Vehicle number plate is required." })
-    .optional(),
-
+    .min(1, { message: "Vehicle number plate is required." }),
   documents: documentSchemaValidation.optional(),
 });
 
@@ -186,15 +180,17 @@ const UpdateUserZodSchemaValidation = z.object({
     .max(500, { message: "Address cannot exceed 500 characters." })
     .optional(),
 
-  vehicleInfo: vehicleInfoSchemaValidation.optional(),
-
   isOnline: z
     .boolean({
       error: () => {
-        return "isDriverApproved value must be true or false.";
+        return "isOnline value must be true or false.";
       },
     })
     .optional(),
+});
+
+const BecomeDriverZodSchemaValidation = z.object({
+  vehicleInfo: vehicleInfoSchemaValidation.optional(),
 });
 
 const UpdateLocationZodSchemaValidation = z.object({
@@ -213,5 +209,6 @@ export {
   RegisterVerificationZodSchemaValidation,
   RegisterSuccessZodSchemaValidation,
   UpdateUserZodSchemaValidation,
+  BecomeDriverZodSchemaValidation,
   UpdateLocationZodSchemaValidation,
 };

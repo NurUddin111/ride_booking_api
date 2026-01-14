@@ -1,32 +1,23 @@
 import { Server } from "http";
 import mongoose from "mongoose";
 
-export const gracefullShutDown = (signal: string, server: Server) => {
-  console.log(`${signal} signal received.Server shutting down...`);
+let isShuttingDown = false;
+
+export const shutDown = (signal: string, server?: Server, exitCode = 0) => {
+  if (isShuttingDown) return; 
+
+  isShuttingDown = true;
+  console.log(`${signal} received. Server shutting down...`);
 
   if (server) {
     server.close(() => {
-      console.log("🛑 Server closed!!!");
-      mongoose.connection.close(false);
-      console.log("📦 MongoDB connection closed.");
-      process.exit(0);
+      console.log("🛑 Server closed");
+      mongoose.connection.close(false).then(() => {
+        console.log("📦 MongoDB connection closed");
+        process.exit(exitCode);
+      });
     });
   } else {
-    process.exit(0);
-  }
-};
-
-export const errorShutDown = (signal: string, server: Server) => {
-  console.log(`${signal} detected.Server shutting down...`);
-
-  if (server) {
-    server.close(() => {
-      console.log("🛑 Server closed!!!");
-      mongoose.connection.close(false);
-      console.log("📦 MongoDB connection closed.");
-      process.exit(0);
-    });
-  } else {
-    process.exit(0);
+    process.exit(exitCode);
   }
 };

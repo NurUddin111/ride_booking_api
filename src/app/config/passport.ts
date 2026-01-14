@@ -16,6 +16,12 @@ import { checkUserStatus } from "../utils/checkUserStatus";
 import { HydratedDocument } from "mongoose";
 import { Request } from "express";
 
+export type DoneFunction = (
+  error: Error | null,
+  user?: IUser | false,
+  options?: { message: string }
+) => void;
+
 passport.use(
   new LocalStrategy(
     {
@@ -23,13 +29,34 @@ passport.use(
       passwordField: "password",
       passReqToCallback: true,
     },
-    async (req: Request, email: string, password: string, done: any) => {
+    async (
+      req: Request,
+      email: string,
+      password: string,
+      done: DoneFunction
+    ) => {
       try {
         const user = (await User.findOne({ email }).select(
           "+password"
         )) as HydratedDocument<IUser>;
 
-        checkUserStatus(req, user, email);
+        if (!user) {
+          return done(null, false, {
+            message: "No account found with this email",
+          });
+        }
+
+        if (user.isDeleted) {
+          return done(null, false, {
+            message: "User is deleted!",
+          });
+        }
+
+        if (!user.isVerified) {
+          return done(null, false, {
+            message: "User is not verified!",
+          });
+        }
 
         const isGoogleAuthenticated = user.auths.some(
           (providerObject) => providerObject.provider === "google"
@@ -53,7 +80,7 @@ passport.use(
 
         return done(null, user);
       } catch (error) {
-        done(error);
+        console.error(error);
       }
     }
   )
@@ -134,7 +161,8 @@ passport.deserializeUser(
     try {
       const user = await User.findById(id);
       done(null, user);
-    } catch (error) {      done(error);
+    } catch (error) {
+      done(error);
     }
   }
 );

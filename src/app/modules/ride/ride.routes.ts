@@ -32,6 +32,18 @@ router.get(
   RideControllers.getMyRidesData
 );
 
+router.get(
+  "/driver-status",
+  checkAuth(Role.DRIVER),
+  RideControllers.getDriverStatus
+);
+
+router.get(
+  "/active",
+  checkAuth(...Object.values(Role)),
+  RideControllers.getActiveRide
+);
+
 router.get("/:id", checkAuth(Role.ADMIN), RideControllers.getSingleRideData);
 
 router.post(
@@ -46,7 +58,7 @@ router.post(
   RideControllers.cancleRideRequest
 );
 
-router.post(
+router.put(
   "/update-ride/:id",
   validateRequest(updateRideZodSchema),
   checkAuth(Role.DRIVER),

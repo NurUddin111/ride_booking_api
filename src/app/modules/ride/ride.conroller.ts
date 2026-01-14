@@ -87,6 +87,36 @@ const getMyRidesData = catchAsync(
   }
 );
 
+const getDriverStatus = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user as JwtPayload;
+    const userId = decodedToken.userId;
+    const rides = await RideServices.getDriverStatus(userId);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: HttpStatusCodes.CREATED,
+      message: "Ride Retrieved successfully",
+      data: rides,
+    });
+  }
+);
+
+const getActiveRide = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user as JwtPayload;
+    const userId = decodedToken.userId;
+    const ride = await RideServices.getActiveRide(userId);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: HttpStatusCodes.OK,
+      message: "Active ride details retrieved successfully!",
+      data: ride,
+    });
+  }
+);
+
 const cancleRideRequest = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const rideId = req.params.id;
@@ -166,6 +196,8 @@ export const RideControllers = {
   getAllRidesData,
   getSingleRideData,
   getMyRidesData,
+  getDriverStatus,
+  getActiveRide,
   cancleRideRequest,
   acceptRideRequest,
   updateRideRequest,

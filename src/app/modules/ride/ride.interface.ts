@@ -35,7 +35,10 @@ export interface IRide {
   };
 
   status: RIDE_STATUS;
-  distanceInKm: number;
+  destinationDistanceInKm: number;
+  pickUpDistanceInKm: number;
+  destinationEta: number;
+  driverEta?: number;
   fareEstimate: {
     min: number;
     max: number;

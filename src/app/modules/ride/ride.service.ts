@@ -1,6 +1,5 @@
 import { JwtPayload } from "jsonwebtoken";
 import AppError from "../../errorHelpers/AppError";
-
 import { HttpStatusCodes } from "../../utils/httpStatusCodes";
 import { Ride } from "./ride.model";
 import { geocodeAddress } from "../../utils/geoApiFy";
@@ -31,6 +30,13 @@ const createRideRequest = async (
   const riderId = decodedToken.userId;
   const rider = (await User.findById(riderId)) as HydratedDocument<IUser>;
 
+  if (rider.penalties) {
+    throw new AppError(
+      HttpStatusCodes.BAD_REQUEST,
+      "To book another ride,please pay the pending fee on your account.We apoligize for any inconvenience."
+    );
+  }
+
   const activeRide = await Ride.findOne({
     riderId,
     status: { $in: ["PENDING", "ACCEPTED", "ONGOING"] },
@@ -40,13 +46,6 @@ const createRideRequest = async (
     throw new AppError(
       HttpStatusCodes.BAD_REQUEST,
       "You already have an active ride. Please finish or cancel it before booking another."
-    );
-  }
-
-  if (rider.penalties) {
-    throw new AppError(
-      HttpStatusCodes.BAD_REQUEST,
-      "To book another ride,please pay the pending fee on your account.We apoligize for any inconvenience."
     );
   }
 
@@ -69,10 +68,26 @@ const createRideRequest = async (
     );
   }
 
+  const countryP = pickUpAddress.split(",").pop()?.trim();
+  if (countryP !== "Bangladesh") {
+    throw new AppError(
+      HttpStatusCodes.NOT_FOUND,
+      "Please select a location inside Bangladesh"
+    );
+  }
+
   if (!destinationAddress) {
     throw new AppError(
       HttpStatusCodes.NOT_FOUND,
       "Please select destination location!"
+    );
+  }
+
+  const countryD = destinationAddress.split(",").pop()?.trim();
+  if (countryD !== "Bangladesh") {
+    throw new AppError(
+      HttpStatusCodes.NOT_FOUND,
+      "Please select a location inside Bangladesh"
     );
   }
 
@@ -101,7 +116,7 @@ const createRideRequest = async (
     destinationCo.longitude
   );
 
-  const estimatedTime = (totalDistance / 20) * 60;
+  const estimatedTime = parseFloat(((totalDistance / 20) * 60).toFixed(2));
 
   const minEstFare = await calculateFare(
     totalDistance,
@@ -126,7 +141,8 @@ const createRideRequest = async (
       },
       address: destinationCo.address,
     },
-    distanceInKm: totalDistance,
+    destinationDistanceInKm: totalDistance,
+    destinationEta: estimatedTime,
     fareEstimate: { min: minEstFare, max: maxEstFare },
   });
 
@@ -139,9 +155,6 @@ const createRideRequest = async (
 
 const getPendingRideRequests = async () => {
   const rideRequests = await Ride.find({ status: RIDE_STATUS.PENDING });
-  if (rideRequests.length === 0) {
-    throw new AppError(HttpStatusCodes.NOT_FOUND, "No pending rides available");
-  }
   return { rideRequests };
 };
 
@@ -188,6 +201,56 @@ const getMyRidesData = async (userId: string) => {
   return { allRides };
 };
 
+const getDriverStatus = async (userId: string) => {
+  const isDriverBusy = await Ride.findOne({
+    $or: [{ riderId: userId }, { driverId: userId }],
+    status: {
+      $in: [
+        RIDE_STATUS.PENDING,
+        RIDE_STATUS.ACCEPTED,
+        RIDE_STATUS.VEHICLE_ARRIVED,
+        RIDE_STATUS.ONGOING,
+      ],
+    },
+  });
+
+  if (!isDriverBusy) {
+    return {};
+  }
+
+  const riderId = isDriverBusy.riderId;
+  const rider = (await User.findById(riderId)) as HydratedDocument<IUser>;
+
+  return { isDriverBusy, rider };
+};
+
+const getActiveRide = async (userId: string) => {
+  const activeRide = await Ride.findOne({
+    $or: [{ riderId: userId }, { driverId: userId }],
+    status: {
+      $nin: [
+        "COMPLETED",
+        "CANCELLED_BY_RIDER",
+        "CANCELLED_BY_DRIVER",
+        "EXPIRED",
+      ],
+    },
+  });
+
+  if (!activeRide) {
+    return {};
+  }
+
+  const driverId = activeRide?.driverId;
+  let driver = {};
+
+  if (driverId) {
+    driver = (await User.findById(driverId)) as HydratedDocument<IUser>;
+  }
+
+  return { activeRide, driver };
+};
+
 const acceptRideRequest = async (rideId: string, decodedToken: JwtPayload) => {
   const ride = (await Ride.findById(rideId)) as HydratedDocument<IRide>;
 
@@ -223,16 +286,9 @@ const acceptRideRequest = async (rideId: string, decodedToken: JwtPayload) => {
     );
   }
 
-  const isDriverBusy = await Ride.find({
-    driverId,
-    status:
-      RIDE_STATUS.PENDING ||
-      RIDE_STATUS.ACCEPTED ||
-      RIDE_STATUS.VEHICLE_ARRIVED ||
-      RIDE_STATUS.ONGOING,
-  }).countDocuments();
+  const driverStatus = await getDriverStatus(driverId);
 
-  if (isDriverBusy) {
+  if (driverStatus.isDriverBusy) {
     throw new AppError(
       HttpStatusCodes.BAD_REQUEST,
       "You can't accept another ride  untill you have completed your current ride!"
@@ -255,12 +311,12 @@ const acceptRideRequest = async (rideId: string, decodedToken: JwtPayload) => {
     driverLocation.coordinates.lng
   );
 
-  if (pickUpLocationDistance >= 5) {
-    throw new AppError(
-      HttpStatusCodes.BAD_REQUEST,
-      "A driver within 5km distance can accept a ride only"
-    );
-  }
+  // if (pickUpLocationDistance >= 5) {
+  //   throw new AppError(
+  //     HttpStatusCodes.BAD_REQUEST,
+  //     "A driver within 5km distance can accept a ride only"
+  //   );
+  // }
 
   const rider = (await User.findById(riderId)) as HydratedDocument<IUser>;
   const email = rider.email;
@@ -269,10 +325,11 @@ const acceptRideRequest = async (rideId: string, decodedToken: JwtPayload) => {
   const riderName = rider.name;
   const driverName = driver.name;
   const vehicleModel = VehicleType.CAR;
-  const vehicleNumber = "RX-5643";
+  const vehicleNumber = driver.vehicleInfo?.vehicleNumberPlate;
   const pickUpAddress = ride.pickupLocation.address;
   const destinationAddress = ride.destinationLocation.address;
-  const eta = (pickUpLocationDistance / 20) * 60;
+  const driverEta = (pickUpLocationDistance / 20) * 60;
+  const destinationEta = ride.destinationEta;
   const fareEstimateMin = ride.fareEstimate.min;
   const fareEstimateMax = ride.fareEstimate.max;
 
@@ -283,7 +340,8 @@ const acceptRideRequest = async (rideId: string, decodedToken: JwtPayload) => {
     vehicleNumber,
     pickUpAddress,
     destinationAddress,
-    eta,
+    driverEta,
+    destinationEta,
     fareEstimateMin,
     fareEstimateMax,
     rideId,
@@ -296,6 +354,8 @@ const acceptRideRequest = async (rideId: string, decodedToken: JwtPayload) => {
   if (rideStatus === RIDE_STATUS.PENDING) {
     ride.driverId = driverId;
     ride.status = RIDE_STATUS.ACCEPTED;
+    ride.driverEta = driverEta;
+    ride.pickUpDistanceInKm = pickUpLocationDistance;
     ride.rideHistory.acceptedAt = new Date();
     await ride.save();
     await OTPServices.sendOTP(email, sub, temp, tempData, OTP_EXPIRATION);
@@ -556,7 +616,7 @@ const updateRideRequest = async (
     );
     rideHistory.travellingTimeInMins = diffMins;
     const totalFare = await calculateFare(
-      ride.distanceInKm,
+      ride.destinationDistanceInKm,
       ride.vehicleType,
       rideHistory.travellingTimeInMins
     );
@@ -630,8 +690,10 @@ export const RideServices = {
   createRideRequest,
   getPendingRideRequests,
   getAllRidesData,
+  getDriverStatus,
   getSingleRideData,
   getMyRidesData,
+  getActiveRide,
   cancelRideRequest,
   acceptRideRequest,
   updateRideRequest,

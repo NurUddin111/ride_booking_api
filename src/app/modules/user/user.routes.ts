@@ -2,6 +2,7 @@ import { Router } from "express";
 import { UserControllers } from "./user.controller";
 import { validateRequest } from "../../middlewares/validateRequest";
 import {
+  BecomeDriverZodSchemaValidation,
   RegisterRequestZodSchemaValidation,
   RegisterSuccessZodSchemaValidation,
   RegisterVerificationZodSchemaValidation,
@@ -14,32 +15,57 @@ import { Role } from "./user.interface";
 const router = Router();
 
 router.post(
-  "/register-request",
+  "/signup",
   validateRequest(RegisterRequestZodSchemaValidation),
   UserControllers.createUserRequest
 );
 
 router.post(
-  "/register-verification",
+  "/signup/verify",
   validateRequest(RegisterVerificationZodSchemaValidation),
   UserControllers.createUserVerification
 );
 
 router.post(
-  "/register-success",
+  "/signup/password",
   validateRequest(RegisterSuccessZodSchemaValidation),
   UserControllers.createUserSuccess
 );
 
-router.get("/", checkAuth(Role.ADMIN), UserControllers.getAllUsers);
+router.get("/all", checkAuth(Role.ADMIN), UserControllers.getAllUsers);
 router.get("/me", checkAuth(...Object.values(Role)), UserControllers.getMe);
+router.get(
+  "/driver-requests",
+  checkAuth(Role.ADMIN),
+  UserControllers.becomeDriverRequests
+);
+
+router.get(
+  "/drivers",
+  checkAuth(Role.ADMIN),
+  UserControllers.getAllDrivers
+);
+
 router.get("/:id", checkAuth(Role.ADMIN), UserControllers.getSingleUser);
 
 router.patch(
-  "/:id",
+  "/edit-profile/:id",
   validateRequest(UpdateUserZodSchemaValidation),
   checkAuth(...Object.values(Role)),
   UserControllers.updateUser
+);
+
+router.patch(
+  "/become-driver/:id",
+  validateRequest(BecomeDriverZodSchemaValidation),
+  checkAuth(Role.RIDER),
+  UserControllers.becomeDriver
+);
+
+router.patch(
+  "/approve-driver/:id",
+  checkAuth(Role.ADMIN),
+  UserControllers.approveDriver
 );
 
 router.patch(

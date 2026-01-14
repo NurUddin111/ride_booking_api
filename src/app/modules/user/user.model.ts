@@ -6,6 +6,7 @@ import {
   IUser,
   IVehicleInfo,
   Role,
+  VehicleBrands,
   VehicleType,
 } from "./user.interface";
 import { bdTimePlugin } from "../../middlewares/fomatTime";
@@ -64,8 +65,9 @@ const vehicleInfoSchema = new Schema<IVehicleInfo>(
       },
     },
 
-    vehicleModel: {
+    brand: {
       type: String,
+      enum: Object.values(VehicleBrands),
       default: null,
       required: function () {
         return this.role === Role.DRIVER;
@@ -143,7 +145,7 @@ const userSchema = new Schema<IUser>(
     isOnline: { type: Boolean, default: false },
 
     vehicleInfo: { type: vehicleInfoSchema, default: null },
-    isDriverApproved: { type: Boolean, default: false },
+    isDriverApproved: { type: Boolean, default: null },
 
     auths: [authProviderSchema],
     bookings: {
