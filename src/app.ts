@@ -23,8 +23,7 @@ app.use(passport.session());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: envVars.FRONTEND_URL,
-    credentials: true,
+    origin: ["http://localhost:5173", "https://safari-seven-jet.vercel.app"],
   })
 );
 app.set("trust proxy", 1);
