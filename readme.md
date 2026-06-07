@@ -1,56 +1,80 @@
-# 🚖 Ride Booking System
+# 🚖 Safari - Backend Service
 
-A full-featured **Ride Booking System** built using modern web technologies. This system allows users to book rides, track drivers, and view ride histories. Admins and drivers have dedicated functionalities for managing rides efficiently.
+![Status](https://img.shields.io/badge/Status-Under%20Development-orange?style=for-the-badge)
+![Version](https://img.shields.io/badge/Version-v1.0-blue?style=for-the-badge)
 
----
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![Mongoose](https://img.shields.io/badge/Mongoose-880000?style=for-the-badge&logo=mongoose&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens)
+![Zod](https://img.shields.io/badge/Zod-3E67B1?style=for-the-badge)
+![Passport.js](https://img.shields.io/badge/Passport.js-34E27A?style=for-the-badge&logo=passport&logoColor=black)
 
-## 🚀 Project Overview
+A modern ride-sharing platform that connects riders and drivers through a secure, scalable, and role-based booking system.
 
-The Ride Booking System is designed to provide a seamless experience for users to book and manage rides. It includes different user roles — **Rider**, **Driver**, and **Admin** — each with their own set of permissions and features.
-
-This project focuses on **scalability**, **security**, and **clean API design**, making it a great foundation for a real-world ride-hailing application.
-
----
-
-## ✨ Features
-
-### 👤 Rider
-
-- Sign up / Log in using JWT authentication
-- Request a ride by providing passengers number,vehicle type, pickup and drop-off locations
-- View real-time ride status updates (Pending, Vehicle Arrived, Ongoing, Completed)
-- View ride history and total fares
-
-### 🚗 Driver
-
-- Accept or decline ride requests
-- Update ride status (Vehicle Arrived → Ongoing → Completed)
-- Track completed rides and total earnings
-
-### 🛠️ Admin
-
-- Manage all users (Riders, Drivers)
-- Monitor all bookings and rides
-
-### 🔐 General
-
-- Secure authentication using **JWT**
-- Centralized error handling and validation
-- Scalable and modular backend structure
+Built with TypeScript, Node.js, Express.js, MongoDB, and JWT authentication.
 
 ---
 
-## 🧰 Tech Stack
+## 📖 Overview
 
-| Category                   | Technologies                    |
-| -------------------------- | ------------------------------- |
-| **Backend**                | Node.js, Express.js, TypeScript |
-| **Database**               | MongoDB, Mongoose               |
-| **Authentication**         | JWT (JSON Web Tokens), Bcrypt   |
-| **Validation**             | Zod                             |
-| **API Testing**            | Postman                         |
-| **Environment Management** | dotenv                          |
-| **Version Control**        | Git & GitHub                    |
+Safari is a backend-driven ride-sharing platform designed to streamline ride booking and management for riders, drivers, and administrators.
+
+The platform supports ride requests, driver assignment, ride lifecycle tracking, earnings management, authentication, authorization, and administrative monitoring through a scalable RESTful architecture.
+
+---
+
+## 🎯 Problem Statement
+
+Traditional transportation booking systems often struggle with role management, ride tracking, and secure access control.
+
+Safari was built to address these challenges by providing:
+
+- Secure authentication and authorization
+- Structured ride lifecycle management
+- Role-based access control
+- Driver earnings tracking
+- Administrative monitoring capabilities
+
+---
+
+## 💡 Solution
+
+Safari introduces a centralized ride management system where:
+
+- Riders can request and monitor rides
+- Drivers can manage ride requests and earnings
+- Administrators can oversee platform operations
+
+The platform follows a modular architecture to ensure scalability, maintainability, and future extensibility.
+
+---
+
+## ✨ Key Features
+
+- Role-Based Access Control
+- Ride Request & Booking Management
+- Driver Assignment Workflow
+- Ride Status Tracking
+- Earnings Management
+- JWT Authentication
+- Google Authentication
+- Password Recovery System
+- Admin Monitoring Tools
+- Secure API Architecture
+
+---
+
+## 🏗 Architecture Highlights
+
+- Modular Folder Structure
+- Service Layer Pattern
+- Centralized Error Handling
+- Role-Based Authorization
+- Request Validation Middleware
+- Secure Token-Based Authentication
 
 ---
 
@@ -177,28 +201,28 @@ This project focuses on **scalability**, **security**, and **clean API design**,
 
 ## ⚙️ Installation & Setup
 
-    ```bash
-    # Clone the repository
-    git clone https://github.com/NurUddin111/ride_booking_api.git
+```bash
+# Clone the repository
+git clone https://github.com/NurUddin111/ride_booking_api.git
 
-    # Navigate to the project directory
-    cd ride-booking-api
+# Navigate to the project directory
+cd ride-booking-api
 
-    # Install dependencies
-    npm install
+# Install dependencies
+npm install
 
-    # Create an .env file
-    cp .env.example .env
-    # (Add your environment variables)
+# Create an .env file
+cp .env.example .env
+# (Add your environment variables)
 
-    # Run the development server
-    npm run dev
+# Run the development server
+npm run dev
+```
+---
 
 ## 🧪 Testing the API
 
----
-
-## 📮 Postman Collection
+### 📮 Postman Collection
 
     You can explore and test all the API endpoints using the Postman collection below.
 
@@ -226,19 +250,25 @@ This project focuses on **scalability**, **security**, and **clean API design**,
 
 ## 🧠 Future Improvements
 
-    Add real-time location tracking with Socket.io
+- Integrate real-time ride tracking and driver location updates
+- Implement secure online payment processing
+- Develop a modern frontend application using Next.js
+- Add in-app and email notifications for ride status updates
+- Introduce ride scheduling and advance booking functionality
+- Implement ratings and reviews for riders and drivers
+- Add analytics and reporting dashboards for administrators
+- Enhance scalability for high-volume ride requests
+  
+## 👨‍💻 Author
 
-    Implement payment gateway integration
+**Muhammad Nur Uddin**
 
-    Create frontend dashboard (Next.js / React)
+Backend-Focused Full-Stack Developer
 
-    Add push notifications for ride updates
+📧 Email: nuruddinmuhammad38@gmail.com
 
-👨‍💻 Author
+💼 [LinkedIn](https://www.linkedin.com/in/muhammad-nur-uddin)
 
-    Muhammad Nur Uddin
+🐙 [GitHub](https://github.com/NurUddin111)
 
-    “Code.Learn.Repeat.”
-    📧 nuruddinmuhammad38@gmail.com
-    🌐 https://github.com/NurUddin111
-    ```
+> "Don't be shy, know the why!"
