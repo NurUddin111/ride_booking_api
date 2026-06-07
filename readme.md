@@ -87,7 +87,7 @@ The platform follows a modular architecture to ensure scalability, maintainabili
 
 ## 📚 API Documentation
 
-Safari exposes RESTful APIs for authentication, user management and ride management.
+Safari exposes RESTful APIs for authentication, user management, and ride management.
 
 ### Available Modules
 
