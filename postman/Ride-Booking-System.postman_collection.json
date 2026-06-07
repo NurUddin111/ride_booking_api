@@ -1,0 +1,1130 @@
+{
+  "info": {
+    "_postman_id": "28f401dc-b363-43c7-b0a9-77daa1b346d6",
+    "name": "Ride-Booking-System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "46020985"
+  },
+  "item": [
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Create Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Nur Uddin\",\r\n    \"email\": \"nuruddinmuhammad38@gmail.com\"\r\n    // \"email\":\"muhammadnuruddin562@gmail.com\"\r\n    // \"password\": \"Nur@12345678\"\r\n    // , \"role\":\"DRIV\"\r\n    // ,\"isVerified\":\"habijabi\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/user/register-request",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "register-request"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Verification",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"otp\": \"314641\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/user/register-verification",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "register-verification"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Success",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"password\": \"Nur@1234567890\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/user/register-success",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "register-success"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Read All",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Nur Uddin\",\r\n    \"email\": \"nur2@gmail.com\",\r\n    \"password\": \"Nur@12345678\"\r\n \r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/user/all",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "all"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Read All Drivers",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Nur Uddin\",\r\n    \"email\": \"nur2@gmail.com\",\r\n    \"password\": \"Nur@12345678\"\r\n \r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/user/drivers",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "drivers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Read Single",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Nur Uddin\",\r\n    \"email\": \"nur2@gmail.com\",\r\n    \"password\": \"Nur@12345678\"\r\n \r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/user/68cc52ce4ca3e5bf308c9dff",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "68cc52ce4ca3e5bf308c9dff"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Read Single [ Own ]",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:1126/api/v1/user/me",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"vehicleInfo\": {\r\n        \"vehicleType\": \"BIKE\",\r\n        \"brand\": \"FZ\",\r\n        \"vehicleNumberPlate\": \"LX-3340\",\r\n        \"documents\": {\r\n            \"drivingLicense\": \"DL445544\",\r\n            \"nidOrPassport\": \"4433221188\",\r\n            \"vehicleRegistration\": \"34fdfd3434\"\r\n        }\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/user/edit-profile/68d9ada55bb822442ece0d15",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "edit-profile",
+                "68d9ada55bb822442ece0d15"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Become Driver",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"vehicleInfo\": {\r\n        \"vehicleType\": \"BIKE\",\r\n        \"brand\": \"FZ\",\r\n        \"vehicleNumberPlate\": \"LX-3340\",\r\n        \"documents\": {\r\n            \"drivingLicense\": \"DL445544\",\r\n            \"nidOrPassport\": \"4433221188\",\r\n            \"vehicleRegistration\": \"34fdfd3434\"\r\n        }\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/user/become-driver/902c3498845e2272e617d122",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "become-driver",
+                "902c3498845e2272e617d122"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Driver Requests",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"vehicleInfo\": {\r\n        \"vehicleType\": \"BIKE\",\r\n        \"brand\": \"FZ\",\r\n        \"vehicleNumberPlate\": \"LX-3340\",\r\n        \"documents\": {\r\n            \"drivingLicense\": \"DL445544\",\r\n            \"nidOrPassport\": \"4433221188\",\r\n            \"vehicleRegistration\": \"34fdfd3434\"\r\n        }\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/user/driver-requests",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "driver-requests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Driver",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"vehicleInfo\": {\r\n        \"vehicleType\": \"BIKE\",\r\n        \"brand\": \"FZ\",\r\n        \"vehicleNumberPlate\": \"LX-3340\",\r\n        \"documents\": {\r\n            \"drivingLicense\": \"DL445544\",\r\n            \"nidOrPassport\": \"4433221188\",\r\n            \"vehicleRegistration\": \"34fdfd3434\"\r\n        }\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/user/approve-driver/902c3498845e2272e617d122",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "approve-driver",
+                "902c3498845e2272e617d122"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Vehicle Location",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"address\": \"Masjid Baitur Rahmat, Chittagong Khagrachhari Highway, Hathazari Upazila - 4334, Bangladesh\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/user/vehicle-location/68d9ada55bb822442ece0d15",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "vehicle-location",
+                "68d9ada55bb822442ece0d15"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:1126/api/v1/user/delete/68cc52ce4ca3e5bf308c9dff",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "delete",
+                "68cc52ce4ca3e5bf308c9dff"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Credentials Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    // \"email\": \"muhammadnuruddin562@gmail.com\", //DRIVER\r\n    // \"email\": \"nuruddinmuhammad38@gmail.com\", //RIDER\r\n    // \"email\": \"super@gmail.com\", //ADMIN\r\n    // \"email\": \"\",\r\n    // \"password\": \"User@12345\"\r\n    \"password\": \"sup12345678\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:1126/api/v1/auth/refresh-token",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "refresh-token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"nur2@gmail.com\",\r\n    \"password\": \"Nur@12345678\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/auth/logout",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"oldPass\": \"Nur@1234567890\",\r\n    \"newPass\": \"Nur@12345678\",\r\n    \"confirmNewPass\": \"Nur@12345678\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/auth/change-password",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "change-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Set Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"password\":\"Nur@0987654321\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/auth/set-password",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "set-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"nuruddinmuhammad38@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/auth/forgot-password",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "forgot-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"newPass\": \"Nur@1234567890\",\r\n    \"confirmNewPass\": \"Nur@1234567890\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/auth/reset-password/68d1a696cce98fe490c353d2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "reset-password",
+                "68d1a696cce98fe490c353d2"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Ride",
+      "item": [
+        {
+          "name": "Ride Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"totalPassengers\": 2,\r\n    \"vehicleType\": \"CNG\",\r\n    \"pickUpAddress\": \"Chattogram,Bangladesh\",\r\n    \"destinationAddress\": \"Hathazari,Sarkarhat,Bangladesh\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/ride/ride-request",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "ride",
+                "ride-request"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pending Requests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:1126/api/v1/ride/pending-ride-requests",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "ride",
+                "pending-ride-requests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Driver Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:1126/api/v1/ride/driver-status",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "ride",
+                "driver-status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Read All [ ADMIN ]",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"totalPassengers\": 1,\r\n    \"vehicleType\": \"CAR\",\r\n    \"pickUpAddress\": \"Chattogram\",\r\n    \"destinationAddress\": \"Hathazari\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/ride/all-rides",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "ride",
+                "all-rides"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Read All [ RIDER / DRIVER ]",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"totalPassengers\": 1,\r\n    \"vehicleType\": \"CAR\",\r\n    \"pickUpAddress\": \"Chattogram\",\r\n    \"destinationAddress\": \"Hathazari\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/ride/my-rides",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "ride",
+                "my-rides"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Active Ride [ RIDER / DRIVER ]",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"totalPassengers\": 1,\r\n    \"vehicleType\": \"CAR\",\r\n    \"pickUpAddress\": \"Chattogram\",\r\n    \"destinationAddress\": \"Hathazari\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/active",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "active"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Read Single [ ADMIN ]",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"totalPassengers\": 1,\r\n    \"vehicleType\": \"CAR\",\r\n    \"pickUpAddress\": \"Chattogram\",\r\n    \"destinationAddress\": \"Hathazari\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/ride/6960ddb2f5713ba5467b4362",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "ride",
+                "6960ddb2f5713ba5467b4362"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "View Earnings [ DRIVER ]",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"totalPassengers\": 1,\r\n    \"vehicleType\": \"CAR\",\r\n    \"pickUpAddress\": \"Chattogram\",\r\n    \"destinationAddress\": \"Hathazari\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/ride/view-earnings/68d9ada55bb822442ece0d15",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "ride",
+                "view-earnings",
+                "68d9ada55bb822442ece0d15"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ride Request Cancel",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:1126/api/v1/ride/cancel-ride/68dd08888c3cf07d066d5c04",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "ride",
+                "cancel-ride",
+                "68dd08888c3cf07d066d5c04"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Accept Ride Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:1126/api/v1/ride/accept-ride/696171580df7d90cf2444cb2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "ride",
+                "accept-ride",
+                "696171580df7d90cf2444cb2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Ride Request",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM3ZjNjNTg0YzJkMzg2NDIzMzg2YWUiLCJlbWFpbCI6Im11aGFtbWFkbnVydWRkaW41NjJAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NTgwMjM2NTMsImV4cCI6MTc1ODExMDA1M30.ytT50JVEd7pEc-6LAJgYjS0WbCDCHa0bvbG16Pzfh6Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\":\"COMPLETED\",\r\n    \"otp\":\"392903\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1126/api/v1/ride/update-ride/696171580df7d90cf2444cb2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "1126",
+              "path": [
+                "api",
+                "v1",
+                "ride",
+                "update-ride",
+                "696171580df7d90cf2444cb2"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

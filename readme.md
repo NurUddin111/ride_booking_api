@@ -78,126 +78,19 @@ The platform follows a modular architecture to ensure scalability, maintainabili
 
 ---
 
-## 🧩 API Endpoints
+## 📚 API Documentation
 
----
+Finvia exposes RESTful APIs for authentication, user management and ride management.
 
-### 👤 USER MODULE
+### Available Modules
 
-    ---------------------------------------------------------------------------------------------------
-    | METHOD |            ENDPOINT           |           BODY             |      DESCRIPTION          |
-    ---------------------------------------------------------------------------------------------------
-    | POST   | /api/v1/user/signup           | {                          | Create a new user         |
-    |        |                               |  "name": "John Doe",       | registration request.     |
-    |        |                               |  "email":"john@example.com"| Sends a 6 digit OTP to    |
-    |        |                               | }                          | verify email.             |
-    ---------------------------------------------------------------------------------------------------
-    | POST   | /api/v1/user/signup/verify    | {                          | Verify user registration  |
-    |        |                               |  "otp": "123456"           | using OTP.                |
-    |        |                               | }                          |                           |
-    |        |                               |                            |                           |
-    ---------------------------------------------------------------------------------------------------
-    | POST   | /api/v1/user/signup/password  | {                          | Complete user registration|
-    |        |                               |  "password": "Abc123@&$",  |                           |
-    |        |                               | }                          |                           |
-    ---------------------------------------------------------------------------------------------------
-    | GET    | /api/v1/user                  |                            | Get All Users(Admin Only) |
-    ---------------------------------------------------------------------------------------------------
-    | GET    | /api/v1/user/me               |                            | Get logged-in user profile|
-    ---------------------------------------------------------------------------------------------------
-    | GET    | /api/v1/user/:id              |                            | Get single user by Id     |
-    |        |                               |                            | (Admin Only)              |
-    ---------------------------------------------------------------------------------------------------
-    | PATCH  | /api/v1/user/:id              | {                          | Update user details.      |
-    |        |                               |  "name":"Mark Henry",      |                           |
-    |        |                               |  "phone":"+880...",        |                           |
-    |        |                               | ...                        |                           |
-    |        |                               | }                          |                           |
-    ---------------------------------------------------------------------------------------------------
-    | PATCH  | /api/v1/user/vehicle-locat    | {                          | Update driver’s vehicle   |
-    |        |  ion/:id                      |  "address":"...address"    | location                  |
-    |        |                               | }                          |                           |
-    ---------------------------------------------------------------------------------------------------
-    | PATCH  | /api/v1/user/delete/:id       |                            | Soft delete a user        |
-    ---------------------------------------------------------------------------------------------------
+* Authentication
+* Users
+* Rides
 
----
+For complete endpoint documentation, see:
 
-### 🔐 AUTH MODULE
-
-    ---------------------------------------------------------------------------------------------------
-    | METHOD |            ENDPOINT           |           BODY             |      DESCRIPTION          |
-    ---------------------------------------------------------------------------------------------------
-    | POST   | /api/v1/auth/login            |                            | Login using email and     |
-    |        |                               |                            | password                  |
-    ---------------------------------------------------------------------------------------------------
-    | GET    | /api/v1/auth/google           |                            | Login via Google OAuth    |
-    ---------------------------------------------------------------------------------------------------
-    | GET    | /api/v1/auth/google/callback  |                            | Google login callback     |
-    |        |                               |                            | handler                   |
-    ---------------------------------------------------------------------------------------------------
-    | POST   | /api/v1/auth/refresh-token    |                            | Get a new access token    |
-    ---------------------------------------------------------------------------------------------------
-    | POST   | /api/v1/auth/logout           |                            | Logout user (invalidate   |
-    |        |                               |                            | token)                    |
-    ---------------------------------------------------------------------------------------------------
-    | POST   | /api/v1/auth/change-password  | {                          | Change user password      |
-    |        |                               |  "oldPass": "123...",      |                           |
-    |        |                               |  "newPass": "654...",      |                           |
-    |        |                               |  "confirmNewPass": "654..."|                           |
-    |        |                               | }                          |                           |
-    ---------------------------------------------------------------------------------------------------
-    | POST   | /api/v1/auth/set-password     | {                          | Set new password (for     |
-    |        |                               |  "password": "123456"      | first-time login)         |
-    |        |                               | }                          |                           |
-    ---------------------------------------------------------------------------------------------------
-    | POST   | /api/v1/auth/forgot-password  | {                          | Send reset link to user   |
-    |        |                               |  "email":"john@example.com"| email                     |
-    |        |                               | }                          |                           |
-    ---------------------------------------------------------------------------------------------------
-    | POST   | /api/v1/auth/reset-passw      | {                          | Reset password using token|
-    |        | ord/:id                       |  "newPass":"654...",       |                           |
-    |        |                               |  "confirmNewPass":"654..." |                           |
-    |        |                               | }                          |                           |
-    ---------------------------------------------------------------------------------------------------
-
----
-
-### 🚖 RIDE MODULE
-
-    ---------------------------------------------------------------------------------------------------
-    | METHOD |            ENDPOINT           |           BODY             |       DESCRIPTION         |
-    ---------------------------------------------------------------------------------------------------
-    | POST   | /api/v1/ride/ride-request     | {                          | Create a ride request     |
-    |        |                               |  "totalPassengers": "2",   | (Rider/Driver/Admin)      |
-    |        |                               |  "vehicleType": "CAR",     |                           |
-    |        |                               |  "pickupAddress":"Khulshi",|                           |
-    |        |                               |  "destinationAddress":"CRB"|                           |
-    |        |                               | }                          |                           |
-    ---------------------------------------------------------------------------------------------------
-    | GET    | /api/v1/ride/pending-ride-re  |                            | Get all pending ride      |
-    |        | quests                        |                            |requests (Driver/Admin)    |
-    ---------------------------------------------------------------------------------------------------
-    | GET    | /api/v1/ride/all-rides        |                            | Get all rides (Admin only)|
-    ---------------------------------------------------------------------------------------------------
-    | GET    | /api/v1/ride/my-rides         |                            |Get rides for logged-in    |
-    |        |                               |                            |user/driver                |
-    ---------------------------------------------------------------------------------------------------
-    | GET    | /api/v1/ride/:id              |                            | Get single ride           |
-    |        |                               |                            |details (Admin)            |
-    ---------------------------------------------------------------------------------------------------
-    | POST   | /api/v1/ride/accept-ride/:id  |                            | Accept ride request       |
-    |        |                               |                            |(Driver)                   |
-    ---------------------------------------------------------------------------------------------------
-    | POST   | /api/v1/ride/cancel-ride/:id  |                            | Cancel ride (Rider/Driver/|
-    |        |                               |                            | Admin)                    |
-    ---------------------------------------------------------------------------------------------------
-    | POST   | /api/v1/ride/update-ride/:id  | {                          | Update ride status or     |
-    |        |                               |  "rideStatus": "ONGOING"   | details                   |
-    |        |                               | }                          | details                   |
-    ---------------------------------------------------------------------------------------------------
-    | GET    | /api/v1/ride/view-earnings/:id|                            | View driver’s earnings    |
-    ---------------------------------------------------------------------------------------------------
+📖 [API Documentation](./docs/api.md)
 
 ## ⚙️ Installation & Setup
 
@@ -223,12 +116,8 @@ npm run dev
 ## 🧪 Testing the API
 
 ### 📮 Postman Collection
-
-    You can explore and test all the API endpoints using the Postman collection below.
-
-    🔗 **[Ride Booking System – Postman Collection](https://api.postman.com/collections/46020985-28f401dc-b363-43c7-b0a9-77daa1b346d6?access_key=PMAT-01K6WD09C5A1E19M5H0B3BMSWQ)**
-
-    Set the base URL: http://localhost:5000
+- [Download Postman Collection](./postman/Ride-Booking-System.postman_collection.json)
+- Set the base URL: http://localhost:1126
 
 📁 Folder Structure
 
