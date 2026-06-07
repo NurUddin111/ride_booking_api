@@ -156,10 +156,13 @@ src/
 
 Backend-Focused Full-Stack Developer
 
-📧 Email: nuruddinmuhammad38@gmail.com
+📧 Email: muhammadnur.codes@gmail.com
+
+🌐 [Portfolio](https://muhammad-nur-uddin.vercel.app)
 
 💼 [LinkedIn](https://www.linkedin.com/in/muhammad-nur-uddin)
 
 🐙 [GitHub](https://github.com/NurUddin111)
 
 > "Don't be shy, know the why!"
+
