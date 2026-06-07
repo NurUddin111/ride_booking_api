@@ -26,6 +26,13 @@ The platform supports ride requests, driver assignment, ride lifecycle tracking,
 
 ---
 
+## 🔗 Project Links
+
+- 🚀 Live Demo: Under Development
+- 🌐 Frontend Repository: https://github.com/NurUddin111/safari-ride-sharing-app-frontend
+
+---
+
 ## 🎯 Problem Statement
 
 Traditional transportation booking systems often struggle with role management, ride tracking, and secure access control.
@@ -80,7 +87,7 @@ The platform follows a modular architecture to ensure scalability, maintainabili
 
 ## 📚 API Documentation
 
-Finvia exposes RESTful APIs for authentication, user management and ride management.
+Safari exposes RESTful APIs for authentication, user management and ride management.
 
 ### Available Modules
 
@@ -119,23 +126,18 @@ npm run dev
 - [Download Postman Collection](./postman/Ride-Booking-System.postman_collection.json)
 - Set the base URL: http://localhost:1126
 
-📁 Folder Structure
+## 📁 Folder Structure
 
-    src/
-    │
-    ├── app/
-    │   ├── config/
-    │   ├── errorHelpers/
-    │   ├── helpers/
-    │   ├── interfaces/
-    │   ├── middlewares/
-    │   ├── modules/
-    │   ├── routes/
-    │   ├── utils/
-    │   └── constants.ts
-    │
-    ├── app.ts
-    └── server.ts
+```text
+src/
+├── app/
+│   ├── config/
+│   ├── middlewares/
+│   ├── modules/
+│   └── routes/
+├── app.ts
+└── server.ts
+```
 
 ## 🧠 Future Improvements
 
